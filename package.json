@@ -1,0 +1,6 @@
+{
+  "name": "Chatty",
+  "version": "0.0.1",
+  "description": "A simple chat application using socket.io and Firebase.",
+  "dependencies": {}
+}
