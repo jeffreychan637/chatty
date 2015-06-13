@@ -13,8 +13,9 @@ body {
     text-align: center;
 /*    background-color: #25a3ef;*/
     color: white;
-/*    border: solid 2px red;*/
     height: 60px;
+    border-top: solid 2px #EF7125;
+    border-bottom: solid 2px #EF7125;
 }
 
 .headings {
@@ -23,19 +24,20 @@ body {
 
 
 .chats-heading {
-    width: 22%;
+    width: 23%;
     float: left;
-    background-color: #F28D50;
+    background-color: #EF7125;
 }
 
 .conversation-heading {
-    width: 56%;
+    width: 62%;
     float: left;
-    color: #25a3ef;
+/*    color: #25a3ef;*/
+    color: #EF7125;
 }
 
 .user-list-heading {
-    width: 22%;
+    width: 15%;
     float: right;
     background-color: #EF7125;
 }
@@ -43,29 +45,22 @@ body {
 .content {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-/*    height: 100%;*/
 }
 
 .chats {
-    width: 22%;
+    width: 23%;
     float: left;
     background-color: #fdf0e9;
-/*    border-right-width: 10px;*/
-/*    border-right-color: purple;*/
-/*    background: red;*/
-/*    border-right: solid 2px purple;*/
-/*    border: solid 2px red;*/
-/*    height: 500px;*/
 }
 
 .conversation {
-    width: 56%;
+    width: 62%;
     float: left;
 }
 
 .user-list {
-    width: 22%;
+    width: 15%;
     float: right;
     background-color: #fdf0e9;
-/*    border-left: solid 2px purple;*/
+    text-align: center;
 }
