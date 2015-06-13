@@ -1,13 +1,11 @@
 'use strict';
 
-var express = require('express');
-
-var app = express(),
-    server = app.listen(3000, '127.0.0.1');
-
-app.get('/', function(req, res) {
-      res.status(200);
-      res.set('Content-Type', 'text/html');
-      res.sendFile(__dirname + '/index.html');
-    });
-
+$(document).ready(function(){ 
+						   
+	var windowHeight = $(window).height();
+    var leftover = windowHeight - $(".nav").height();
+    console.log(leftover + "px");
+    $(".chats").css("height", leftover.toString() + "px");
+//    $("#chats").css("background-color", "red");
+	
+});
