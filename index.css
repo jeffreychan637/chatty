@@ -4,6 +4,7 @@ html {
 body {
     margin: 0px;
 /*    height: 100%;*/
+/*    overflow: hidden;*/
 }
 
 .nav {
@@ -45,6 +46,7 @@ body {
 .content {
     font-family: 'Lato', sans-serif;
     font-weight: 400;
+    font-size: 18px;
 }
 
 .chats {
@@ -53,9 +55,63 @@ body {
     background-color: #fdf0e9;
 }
 
+.chat {
+    padding: 10px;
+    border-bottom: solid 2px #fbe2d3;
+}
+
+.chat-person {
+    float: left;
+}
+
+.chat-date {
+    float: right;
+}
+
+.chat-piece {
+    margin-top: 10px;   
+}
+
+.chat-latest {
+/*    float: left;*/
+    line-height: 28px;
+}
+
+.chat-count {
+    float: right;
+    background-color: #EF7125;
+    width: 14px;
+    height: 14px;
+    padding: 7px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+    font-size: 11px;
+}
+
 .conversation {
     width: 62%;
     float: left;
+}
+
+.reply-box {
+    height: 80px;
+    background-color: #EF7125;
+}
+
+.reply {
+    height: 22px;
+    font-size:  18px;
+    margin: 18px 15px;
+    padding: 10px 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    outline: none;
+    border-color: white;
+    resize: none;
 }
 
 .user-list {
@@ -63,4 +119,26 @@ body {
     float: right;
     background-color: #fdf0e9;
     text-align: center;
+}
+
+.user {
+    
+}
+
+.online {
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: #EF7125;
+    display: inline-block;
+    margin-left: 30px;
+    margin-top: 6px;
+    float: left;
+}
+
+.user-name {
+/*    float: right;*/
+    margin-right: 40px;
 }
