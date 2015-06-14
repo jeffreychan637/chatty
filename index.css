@@ -4,7 +4,7 @@ html {
 body {
     margin: 0px;
 /*    height: 100%;*/
-/*    overflow: hidden;*/
+    min-width: 565px;
 }
 
 .nav {
@@ -26,12 +26,14 @@ body {
 
 .chats-heading {
     width: 23%;
+    min-width: 210px;
     float: left;
     background-color: #EF7125;
 }
 
 .conversation-heading {
     width: 62%;
+    min-width: 355px;
     float: left;
 /*    color: #25a3ef;*/
     color: #EF7125;
@@ -39,6 +41,7 @@ body {
 
 .user-list-heading {
     width: 15%;
+    min-width: 190px;
     float: right;
     background-color: #EF7125;
 }
@@ -51,6 +54,7 @@ body {
 
 .chats {
     width: 23%;
+    min-width: 210px;
     float: left;
     background-color: #fdf0e9;
 }
@@ -93,6 +97,7 @@ body {
 
 .conversation {
     width: 62%;
+    min-width: 355px;
     float: left;
 }
 
@@ -116,13 +121,15 @@ body {
 
 .user-list {
     width: 15%;
+    min-width: 190px;
     float: right;
     background-color: #fdf0e9;
     text-align: center;
 }
 
 .user {
-    
+    padding: 7px;
+    border-bottom: solid 2px #fbe2d3;
 }
 
 .online {
@@ -133,12 +140,38 @@ body {
     border-radius: 50%;
     background-color: #EF7125;
     display: inline-block;
-    margin-left: 30px;
+    margin-left: 10%;
     margin-top: 6px;
     float: left;
 }
 
 .user-name {
 /*    float: right;*/
-    margin-right: 40px;
+    margin-right: 10%;
+}
+
+.not-online-dot {
+    display: none;
+}
+
+.not-online {
+    margin-right: 0%;
+    margin-left: 5%;
+}
+
+@media all and (max-width: 1268px) {
+    .user-list-heading {
+        display: none;
+        width: 0%;
+    }
+    .user-list {
+        display: none;
+        width: 0%;
+    }
+    .conversation-heading {
+        width: 78%;
+    }
+    .conversation {
+        width: 78%;
+    }
 }
