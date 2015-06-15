@@ -175,15 +175,18 @@ body {
     padding: 7px;
     border-bottom: solid 2px #fbe2d3;
     text-align: left;
-    padding-left: 2.7em;
 }
 
-.not-online {
-    padding-left: 2.9em;
+.not-online .user-box {
+    margin-left: 2.9em;
 }
 
 .not-online i {
     display: none;
+}
+
+.user-box {
+    margin-left: 2.2em;   
 }
 
 .online {
@@ -194,11 +197,7 @@ body {
     right: 10px;
 }
 
-.not-online {
-    margin-right: 0%;
-    margin-left: 5%;
-}
-
+/*
 @media all and (max-width: 1268px) {
     .user-list-heading {
         display: none;
@@ -208,12 +207,11 @@ body {
         display: none;
         width: 0%;
     }
-/*
     .conversation-heading {
         width: 78%;
     }
     .conversation {
         width: 78%;
     }
-*/
 }
+*/
