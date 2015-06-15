@@ -39,6 +39,50 @@ body {
     color: #EF7125;
 }
 
+.icon-wrap {
+    width: 15%;   
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.text-wrap  {
+    width: 70%;   
+}
+
+.icon {
+    font-size: 26px;   
+}
+
+.middle-icon-wrap {
+    width: 5%;   
+}
+
+.middle-text-wrap {
+    width: 90%;
+}
+
+.sign-out { 
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+}
+
+.circle {
+    font-size: 12px;
+    line-height: 25px;
+    position: relative;
+    bottom: 4px;
+    right: 2px;
+}
+
 .user-list-heading {
     width: 15%;
     min-width: 190px;
@@ -130,28 +174,24 @@ body {
 .user {
     padding: 7px;
     border-bottom: solid 2px #fbe2d3;
+    text-align: left;
+    padding-left: 2.7em;
+}
+
+.not-online {
+    padding-left: 2.9em;
+}
+
+.not-online i {
+    display: none;
 }
 
 .online {
-    width: 10px;
-    height: 10px;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-    background-color: #EF7125;
-    display: inline-block;
-    margin-left: 10%;
-    margin-top: 6px;
-    float: left;
-}
-
-.user-name {
-/*    float: right;*/
-    margin-right: 10%;
-}
-
-.not-online-dot {
-    display: none;
+    font-size: 12px;
+    color: #EF7125;
+    position: relative;
+    bottom: 2px;
+    right: 10px;
 }
 
 .not-online {
@@ -168,10 +208,12 @@ body {
         display: none;
         width: 0%;
     }
+/*
     .conversation-heading {
         width: 78%;
     }
     .conversation {
         width: 78%;
     }
+*/
 }
