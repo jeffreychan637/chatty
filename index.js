@@ -17,6 +17,10 @@ $(document).ready(function(){
     console.log(remainingHeight);
     $(".conversation-box").css("height", remainingHeight.toString() + "px");
     
+//    if ($("#y").height() > 21) {
+//        $(""
+//    };
+    
 //    $("body").css("max-height", windowHeight.toString() + "px");
 	
 });
