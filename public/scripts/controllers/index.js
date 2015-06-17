@@ -26,4 +26,6 @@ angular.module('chatty')
 //    $("body").css("max-height", windowHeight.toString() + "px");
 	
     });
+    
+    var socket = io();
 });
