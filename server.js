@@ -1,6 +1,7 @@
 'use strict';
 
 var express = require('express');
+var Firebase = require("firebase");
 
 
 var app = express(),
@@ -16,7 +17,10 @@ app.get('/', function(req, res) {
 app.use(express.static('public'));
 
 io.on('connection', function(socket){
-  console.log('a user connected');
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
 });
 
 
