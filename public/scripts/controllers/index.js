@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('chatty')
-  .controller('chattyCtrl', function ($scope, $document) {
-    $document.ready(function(){ 
+  .controller('chattyCtrl', function ($scope, $document, server, modals) {
+    $document.ready(function() { 
 						   
         var windowHeight = $(window).height();
         var leftover = windowHeight - $(".nav").height();
@@ -24,8 +24,24 @@ angular.module('chatty')
 //    };
     
 //    $("body").css("max-height", windowHeight.toString() + "px");
+        
 	
     });
     
-    var socket = io();
+    
+    
+    $scope.login = function() {
+      console.log($scope.username);
+      if ($scope.username && $scope.password) {
+        user = {
+                username: $scope.username,
+                password: $scope.password
+               };
+        server.postUserLogin(user);    
+        modals.login.modal("hide");
+          
+//          var socket = io();
+      }
+    };
+    
 });

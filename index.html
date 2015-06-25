@@ -6,17 +6,43 @@
         <meta name="author" content="Jeffrey Chan">
         <meta name="description" content="A simple chat application built with socket.io and Firebase.">
         <meta name="keywords" content="chat chatty desktop application socket.io Firebase example Jeffrey Chan">
-        <link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="scripts/bootstrap/bootstrap.css" type="text/css">
+        <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Lato:400,700' type='text/css'>
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="styles/index.css" type="text/css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
         <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.5.3/modernizr.min.js" type="text/javascript"></script>
+        <script src="scripts/bootstrap/bootstrap.min.js" type="text/javascript"></script>
         <script src="scripts/app.js" type="text/javascript"></script>
+        <script src="scripts/services/server.js" type="text/javascript"></script>
+        <script src="scripts/services/modals.js" type="text/javascript"></script>
         <script src="scripts/controllers/index.js" type="text/javascript"></script>
-        </head>
+    </head>
     <body ng-controller="chattyCtrl">
+        
+        <!-- Modal -->
+        <div id="login" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="modal-title" id="myModalLabel">Login or Sign Up</span>
+              </div>  
+              <div class="modal-body">
+                <input placeholder="Username" type="text" class="top-input" ng-model="username" required>
+                <input placeholder="Password" type="password" ng-model="password" required>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-default left" ng-click="signup()">Sign Up</button>
+                <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Modal -->
+
+        
         <div class="nav">
             <div class="chats-heading headings">
                 <span class="icon-wrap left"><i class="fa fa-sign-out sign-out icon"></i></span>
@@ -128,7 +154,7 @@
                         <span>Jeffrey Chan</span>
                     </div>
                 </div>
-            </div>
+            </div>            
         </div>
     </body>
 </html>
