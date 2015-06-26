@@ -8,7 +8,17 @@ var verifyEnum = {
   NOUSER: 2
 };
 
-Object.freeze(verifyEnum); 
+Object.freeze(verifyEnum);
+
+var onlineList = [];
+
+var removeFromList = function(list, value) {
+  index = list.indexOf(value);
+  if (index !== -1) {
+   list.splice(index, 1); 
+  }
+  return list
+};
 
 var authenticate = function(data, callback) {
   console.log(data);
@@ -40,6 +50,17 @@ var postAuthenticate = function(socket, data) {
 
   connections.setupSocket(user);
   user.socket.emit("authorized");
+  onlineList.append(user.username);
+  //braodcast online list here
+};
+
+var setupSocket = function(user) {
+  connections.setupSocket(user);
+  user.socket('disconnect', function() {
+    onlineList = removeFromList(onlineList, user.username);
+    //broadcast new online list
+    //do some other cleanup? - actually setup cleanup in the connections file
+  });
 };
 
 module.exports = function(server) {
@@ -53,7 +74,6 @@ module.exports = function(server) {
   
   // set up other socket stuff
   
-  //set up broadcasting here
   
   return io; 
   

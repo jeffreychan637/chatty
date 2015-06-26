@@ -16,12 +16,3 @@ app.get('/', function(req, res) {
       res.set('Content-Type', 'text/html');
       res.sendFile(path.resolve(__dirname + '/../client/views/index.html'));
     });
-
-io.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
-});
-
-
