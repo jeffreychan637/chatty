@@ -2,10 +2,14 @@
 
 var Firebase = require("firebase");
 
-module.exports = {
-  getUserConversations: getUserConversations
+var getUserConversations = function(amount) {
+
 };
 
-var getUserCoversations = function(amount) {
 
+
+
+
+module.exports = {
+  getUserConversations: getUserConversations
 };

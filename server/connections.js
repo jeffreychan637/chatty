@@ -1,10 +1,6 @@
 'use strict';
 
-database = require('./database');
-
-module.exports = {
-  setupSocket: setupSocket
-}
+var database = require('./database');
 
 var setupSocket = function(user) {
  //break setup into multiple functions
@@ -16,3 +12,7 @@ var handleConversations = function(user) {
     var conversations = database.getUserConversations(20); 
   });
 };
+
+module.exports = {
+  setupSocket: setupSocket
+}

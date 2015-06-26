@@ -1,24 +1,6 @@
 'use strict';
 
-connections = require('./connections');
-
-module.exports = function(server) {
-  var io = require('socket.io').listen(server);
-  
-  require('socketio-auth')(io, {
-    authenticate: authenticate, 
-    postAuthenticate: postAuthenticate,
-    timeout: 2000 //set to 1000 if possible
-  });
-  
-  // set up other socket stuff
-  
-  //set up broadcasting here
-  
-  return io;
-  
-  
-}
+var connections = require('./connections');
 
 var verifyEnum = {
   SUCCESS: 0,
@@ -26,8 +8,7 @@ var verifyEnum = {
   NOUSER: 2
 };
 
-Object.freeze(verifyEnum);
-  
+Object.freeze(verifyEnum); 
 
 var authenticate = function(data, callback) {
   console.log(data);
@@ -56,8 +37,25 @@ var postAuthenticate = function(socket, data) {
     socket: socket,
     username: data.username
   };
-  
+
   connections.setupSocket(user);
   user.socket.emit("authorized");
 };
+
+module.exports = function(server) {
+  var io = require('socket.io').listen(server);
+  
+  require('socketio-auth')(io, {
+    authenticate: authenticate, 
+    postAuthenticate: postAuthenticate,
+    timeout: 2000 //set to 1000 if possible
+  });
+  
+  // set up other socket stuff
+  
+  //set up broadcasting here
+  
+  return io; 
+  
+}
   
