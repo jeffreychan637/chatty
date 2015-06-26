@@ -1,9 +1,7 @@
 'use strict';
 
-var path = require('path');
-var express = require('express');
-var Firebase = require("firebase");
-
+var path = require('path'),
+    express = require('express');
 
 var app = express(),
     server = app.listen(3000, '127.0.0.1'),
