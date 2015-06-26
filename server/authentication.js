@@ -51,7 +51,7 @@ var verifyPassword = function(userLogin) {
       console.log("Authenticated successfully with payload:", authData);
       return verifyEnum.SUCCESS;
     }
-  });
+  }, { remember: "none"});
 }
   
 var postAuthenticate = function(socket, data) {
