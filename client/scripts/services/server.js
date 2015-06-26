@@ -7,7 +7,7 @@ angular.module('chatty').factory('server', function ($http, $q) {
     var deferred = $q.defer();
     $http({
             method: 'PUT',
-            url: "/userLogin",
+            url: "/userSignup",
             timeout: 10000,
             data: user
           }).success(function (message, status) {
@@ -25,6 +25,6 @@ angular.module('chatty').factory('server', function ($http, $q) {
   };
 
   return {
-    postUserLogin: postUserLogin
+    postUserSignup: postUserSignup
   };
 });

@@ -51,6 +51,24 @@ angular.module('chatty')
         //show some spinning wheel saying login happening      
       }
     };
+  
+    $scope.signup = function() {
+       if ($scope.username && $scope.password) {
+        var user = {
+                    username: $scope.username,
+                    password: $scope.password
+                   };
+        server.postUserSignup(user).then(
+          function () {
+            $scope.login(); //verift that $scope.username/pwd didn't get reset
+          },
+          function () {
+            //show some failure message (e.g. username taken)
+            //go back to basic sign in page
+          });
+         //show some spinnning wheel saying sign up happening
+      }
+    }
           
     var getBasicInfo = function() {
         sockets.getBasicInfo(socket).then(
