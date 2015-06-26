@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('chatty')
-  .controller('chattyCtrl', function ($scope, $document, server, modals) {
+  .controller('chattyCtrl', function ($scope, $document, server, modals, sockets) {
     $document.ready(function() { 
 						   
         var windowHeight = $(window).height();
@@ -27,28 +27,41 @@ angular.module('chatty')
         
 	
     });
+  
+    var socket;
     
     
     
     $scope.login = function() {
-      var socket = io();
-      console.log($scope.username);
       if ($scope.username && $scope.password) {
-        user = {
-                username: $scope.username,
-                password: $scope.password
-               };
-        server.postUserLogin(user).then(
+        var user = {
+                    username: $scope.username,
+                    password: $scope.password
+                   };
+        socket = io();
+        sockets.authenticate(socket, user).then(
           function() {
-            loadUserData();
-            //modals.login.modal("hide");
+            console.log("yes");
+            getBasicInfo();
+          }, 
+          function() {
+            console.log("no");
+            //show some failure message
+          });
+        //show some spinning wheel saying login happening      
+      }
+    };
+          
+    var getBasicInfo = function() {
+        sockets.getBasicInfo(socket).then(
+          function() {
+            modals.login.modal("hide");
           },
           function() {
-            failedUserLogin();
+            //show some failure to load info; please refresh page message
           });
-          
-//          var socket = io();
-      }
+        //show some message saying loading info
+            
     };
     
 });
