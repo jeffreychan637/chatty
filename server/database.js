@@ -6,6 +6,6 @@ module.exports = {
   getUserConversations: getUserConversations
 };
 
-var getUserCoversations = function() {
+var getUserCoversations = function(amount) {
 
 };

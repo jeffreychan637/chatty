@@ -1,5 +1,7 @@
 'use strict';
 
+connections = require('./connections');
+
 module.exports = function(server) {
   var io = require('socket.io').listen(server);
   
@@ -10,6 +12,8 @@ module.exports = function(server) {
   });
   
   // set up other socket stuff
+  
+  //set up broadcasting here
   
   return io;
   
@@ -53,14 +57,7 @@ var postAuthenticate = function(socket, data) {
     username: data.username
   };
   
-  defineSocket(user);
+  connections.setupSocket(user);
   user.socket.emit("authorized");
 };
-
-var defineSocket = function(user) {
-  //define here
-  user.socket.on("get20Conversations", function() {
-    var conversations = getUserConversations(20); 
-  });
-}
   

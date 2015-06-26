@@ -5,7 +5,7 @@ var path = require('path'),
 
 var app = express(),
     server = app.listen(3000, '127.0.0.1'),
-    io = require('./sockets')(server);
+    io = require('./authentication')(server);
 
 app.use(express.static('client'));
 app.use(express.static('../client'));
