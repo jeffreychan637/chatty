@@ -22,9 +22,6 @@ angular.module('chatty').factory('sockets', function ($q) {
   var getBasicInfo = function(socket) {
     var deferred = $q.defer();
     
-    
-    
-    
     return deferred.promise;
   };
   
