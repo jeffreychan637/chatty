@@ -1,9 +1,11 @@
 'use strict';
 
 var Firebase = require("firebase");
-var secret = require("./secret");
+var secrets = require("./secrets");
 
-var myFirebaseRef = new Firebase(secret.firebaseUrl);
+var firebaseRef = new Firebase(secrets.firebaseUrl);
+var usersRef = new Firebase(secrets.firebaseUrl + '/users');
+var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 
 var getUserConversations = function(amount) {
 

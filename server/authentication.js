@@ -1,6 +1,10 @@
 'use strict';
 
+var Firebase = require('firebase');
 var connections = require('./connections');
+var secrets = require('./secrets');
+
+var firebaseRef = new Firebase(secrets.firebaseUrl);
 
 var verifyEnum = {
   SUCCESS: 0,
@@ -35,9 +39,19 @@ var authenticate = function(data, callback) {
 var verifyPassword = function(userLogin) {
   console.log("username: " + userLogin.username + "\n");
   console.log("password: " + userLogin.password + "\n");
-  return verifyEnum.SUCCESS;
+//  return verifyEnum.SUCCESS;
   
-  //actually verify password/username at some point
+  firebaseRef.authWithPassword({
+    email    : userLogin.username,
+    password : userLogin.password
+  }, function(error, authData) {
+    if (error) {
+      return verifyEnum.WRONGPASSWORD;
+    } else {
+      console.log("Authenticated successfully with payload:", authData);
+      return verifyEnum.SUCCESS;
+    }
+  });
 }
   
 var postAuthenticate = function(socket, data) {
