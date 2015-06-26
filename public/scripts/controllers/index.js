@@ -31,14 +31,21 @@ angular.module('chatty')
     
     
     $scope.login = function() {
+      var socket = io();
       console.log($scope.username);
       if ($scope.username && $scope.password) {
         user = {
                 username: $scope.username,
                 password: $scope.password
                };
-        server.postUserLogin(user);    
-        modals.login.modal("hide");
+        server.postUserLogin(user).then(
+          function() {
+            loadUserData();
+            //modals.login.modal("hide");
+          },
+          function() {
+            failedUserLogin();
+          });
           
 //          var socket = io();
       }

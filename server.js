@@ -6,7 +6,7 @@ var Firebase = require("firebase");
 
 var app = express(),
     server = app.listen(3000, '127.0.0.1'),
-    io = require('socket.io').listen(server);
+    io = require('./sockets')(server);
 
 app.get('/', function(req, res) {
       res.status(200);
