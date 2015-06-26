@@ -13,7 +13,7 @@ Object.freeze(verifyEnum);
 var onlineList = [];
 
 var removeFromList = function(list, value) {
-  index = list.indexOf(value);
+  var index = list.indexOf(value);
   if (index !== -1) {
    list.splice(index, 1); 
   }
@@ -48,16 +48,18 @@ var postAuthenticate = function(socket, data) {
     username: data.username
   };
 
-  connections.setupSocket(user);
+  setupSocket(user);
   user.socket.emit("authorized");
-  onlineList.append(user.username);
+  onlineList.push(user.username);
+  console.log(onlineList);
   //braodcast online list here
 };
 
 var setupSocket = function(user) {
   connections.setupSocket(user);
-  user.socket('disconnect', function() {
+  user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
+    console.log(onlineList);
     //broadcast new online list
     //do some other cleanup? - actually setup cleanup in the connections file
   });
