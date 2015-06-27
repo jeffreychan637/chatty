@@ -24,32 +24,44 @@ var removeFromList = function(list, value) {
   return list
 };
 
+var createUser = function(user, callback, responseObject) {
+
+  firebaseRef.createUser({
+    email    : user.username + "@valid.email",
+    password : user.password
+  }, function(error, userData) {
+    if (error) {
+      console.log("Error creating user:", error);
+      callback(error, false, responseObject);
+    } else {
+      console.log("Successfully created user account with uid:", userData.uid);
+      callback(null, true, responseObject);
+    }
+  }); 
+  
+}
+
 var authenticate = function(data, callback) {
   console.log(data);
-  var response = verifyPassword(data);
-  if (response == verifyEnum.SUCCESS) {
-    callback(null, true); 
-  } else if (response == verifyEnum.WRONGPASSWORD) {
-    callback(null, false);
-  } else {
-    callback(new Error("No such User found"));
-  }
+  verifyPassword(data, callback);
 };
 
-var verifyPassword = function(userLogin) {
+var verifyPassword = function(userLogin, callback) {
   console.log("username: " + userLogin.username + "\n");
   console.log("password: " + userLogin.password + "\n");
 //  return verifyEnum.SUCCESS;
   
   firebaseRef.authWithPassword({
-    email    : userLogin.username,
+    email    : userLogin.username + "@valid.email",
     password : userLogin.password
   }, function(error, authData) {
     if (error) {
-      return verifyEnum.WRONGPASSWORD;
+//      return {result: verifyEnum.WRONGPASSWORD, error: error};
+      callback(error, false);
     } else {
       console.log("Authenticated successfully with payload:", authData);
-      return verifyEnum.SUCCESS;
+//      return {result: verifyEnum.SUCCESS, error: ""};
+      callback(null, true);
     }
   }, { remember: "none"});
 }
@@ -91,7 +103,10 @@ module.exports = function(server) {
   // set up other socket stuff
   
   
-  return io; 
+  return {
+    io: io,
+    createUser: createUser
+  }
   
 }
   

@@ -3,10 +3,11 @@
 
 angular.module('chatty').factory('server', function ($http, $q) {
 
-  var postUserLogin = function(user) {
+  var postUserSignup = function(user) {
+    console.log(user);
     var deferred = $q.defer();
     $http({
-            method: 'PUT',
+            method: 'POST',
             url: "/userSignup",
             timeout: 10000,
             data: user
