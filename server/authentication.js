@@ -1,8 +1,8 @@
 'use strict';
 
-var Firebase = require('firebase');
-var connections = require('./connections');
-var secrets = require('./secrets');
+var Firebase = require('firebase'),
+    connections = require('./connections'),
+    secrets = require('./secrets');
 
 var firebaseRef = new Firebase(secrets.firebaseUrl);
 
@@ -59,18 +59,23 @@ var postAuthenticate = function(socket, data) {
   };
 
   setupSocket(user);
-  user.socket.emit("authorized");
+  user.socket.emit('authorized');
   onlineList.push(user.username);
   console.log(onlineList);
-  //braodcast online list here
+  socket.broadcast.emit('onlineList', onlineList);
 };
 
 var setupSocket = function(user) {
   connections.setupSocket(user);
+  
+  user.socket.on('onlineList', function() {
+    user.socket.emit('onlineList', onlineList);
+  });
+  
   user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
     console.log(onlineList);
-    //broadcast new online list
+    socket.broadcast.emit('onlineList', onlineList);
     //do some other cleanup? - actually setup cleanup in the connections file
   });
 };
