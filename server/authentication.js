@@ -6,14 +6,6 @@ var secrets = require('./secrets');
 
 var firebaseRef = new Firebase(secrets.firebaseUrl);
 
-var verifyEnum = {
-  SUCCESS: 0,
-  WRONGPASSWORD: 1,
-  NOUSER: 2
-};
-
-Object.freeze(verifyEnum);
-
 var onlineList = [];
 
 var removeFromList = function(list, value) {
@@ -41,26 +33,18 @@ var createUser = function(user, callback, responseObject) {
   
 }
 
-var authenticate = function(data, callback) {
-  console.log(data);
-  verifyPassword(data, callback);
-};
-
-var verifyPassword = function(userLogin, callback) {
+var authenticate = function(userLogin, callback) {
   console.log("username: " + userLogin.username + "\n");
   console.log("password: " + userLogin.password + "\n");
-//  return verifyEnum.SUCCESS;
   
   firebaseRef.authWithPassword({
     email    : userLogin.username + "@valid.email",
     password : userLogin.password
   }, function(error, authData) {
     if (error) {
-//      return {result: verifyEnum.WRONGPASSWORD, error: error};
       callback(error, false);
     } else {
       console.log("Authenticated successfully with payload:", authData);
-//      return {result: verifyEnum.SUCCESS, error: ""};
       callback(null, true);
     }
   }, { remember: "none"});

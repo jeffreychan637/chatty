@@ -76,6 +76,7 @@ angular.module('chatty')
             modals.login.modal("hide");
           },
           function() {
+            console.log("get basic info failed");
             //show some failure to load info; please refresh page message
           });
         //show some message saying loading info

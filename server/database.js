@@ -13,8 +13,6 @@ var getUserConversations = function(amount) {
 
 
 
-
-
 module.exports = {
   getUserConversations: getUserConversations
 };

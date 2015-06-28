@@ -19,15 +19,25 @@ angular.module('chatty').factory('sockets', function ($q) {
     return deferred.promise;
   }
   
+  //used to load basic info  - lastest conversations and online list
   var getBasicInfo = function(socket) {
     var deferred = $q.defer();
-    deferred.resolve();
+    
+    //request online list
+    //request latest conversations
+    
+    setTimeout(function() { deferred.resolve() }, 1000);
+    
     return deferred.promise;
   };
   
   var defineSocket = function(socket) {
     //define socket properties 
-  }
+  };
+  
+  var getConversation = function(socket) {
+    //get details on a conversation
+  };
 
   return {
     authenticate: authenticate,
