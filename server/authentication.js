@@ -29,7 +29,9 @@ var createUser = function(user, callback, responseObject) {
       console.log("Successfully created user account with uid:", userData.uid);
       callback(null, true, responseObject);
     }
-  }); 
+  });
+  
+  connections.addUser(user.username);
   
 }
 
@@ -62,7 +64,7 @@ var postAuthenticate = function(socket, data) {
   user.socket.emit('authorized');
   onlineList.push(user.username);
   console.log(onlineList);
-  socket.broadcast.emit('onlineList', onlineList);
+  user.socket.broadcast.emit('onlineList', onlineList);
 };
 
 var setupSocket = function(user) {
@@ -75,7 +77,7 @@ var setupSocket = function(user) {
   user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
     console.log(onlineList);
-    socket.broadcast.emit('onlineList', onlineList);
+    user.socket.broadcast.emit('onlineList', onlineList);
     //do some other cleanup? - actually setup cleanup in the connections file
   });
 };

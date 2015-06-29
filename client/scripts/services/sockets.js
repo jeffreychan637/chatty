@@ -39,6 +39,10 @@ angular.module('chatty').factory('sockets', function ($q) {
       //run some kind of callback to index.js that causes the online list to be updated
       console.log(onlineList);
     });
+    
+    socket.on('userList', function(userList) {
+      console.log('user list: ' + userList); 
+    });
   };
   
   var getConversation = function(socket) {
@@ -48,6 +52,7 @@ angular.module('chatty').factory('sockets', function ($q) {
   var getOnlineList = function(socket) {
     console.log('emit onlineList');
     socket.emit('onlineList');
+    //I don't think you should ever be getting online list...it should be sent to you automatically...
   };
 
   return {
