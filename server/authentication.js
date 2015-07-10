@@ -27,11 +27,10 @@ var createUser = function(user, callback, responseObject) {
       callback(error, false, responseObject);
     } else {
       console.log("Successfully created user account with uid:", userData.uid);
+      connections.addUser(user.username);
       callback(null, true, responseObject);
     }
   });
-  
-  connections.addUser(user.username);
   
 }
 

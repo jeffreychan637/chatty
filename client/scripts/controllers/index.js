@@ -33,7 +33,10 @@ angular.module('chatty')
     $scope.userList = [];
     var onlineList = [];
     
-    $scope.$watch(sockets.checkData,
+    $scope.$watch(function() {
+                    console.log("checking data");
+                    return sockets.checkData()
+                  },
                   function() {
                     data = sockets.getData();
                     $scope.userList = data.userList;
