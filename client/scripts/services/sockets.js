@@ -1,7 +1,7 @@
 'use strict';
 /*global $:false, FB:false, jQuery:false */
 
-angular.module('chatty').factory('sockets', function ($q) {
+angular.module('chatty').factory('sockets', function ($q, $rootScope) {
   
   var data = {};
   
@@ -56,14 +56,16 @@ angular.module('chatty').factory('sockets', function ($q) {
       console.log(socket.user);
       data.onlineList = onlineList;
       dataChanged += 1;
+      $rootScope.$apply();
     });
     
     socket.on('userList', function(serverData) {
-      console.log('user list: ' + serverData);
+      console.log('user list: ' + serverData.user);
       console.log(socket.user);
       data.userList = serverData.userList;
       dataChanged += 1;
       console.log(dataChanged);
+      $rootScope.$apply();
     });
   };
   

@@ -44,7 +44,7 @@ angular.module('chatty')
                     console.log("saw change in data");
                     console.log(sockets.checkData());
                     console.log($scope.userList);
-    });
+    }, true);
     
     
     $scope.login = function() {
