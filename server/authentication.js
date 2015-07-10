@@ -59,20 +59,23 @@ var postAuthenticate = function(socket, data) {
     socket: socket,
     username: data.username
   };
-
+  console.log('user has been authorized');
   setupSocket(user);
-  user.socket.emit('authorized');
-  onlineList.push(user.username);
+  if (onlineList.indexOf(user.username) == -1) {
+    onlineList.push(user.username);
+  }
   console.log(onlineList);
+  user.socket.emit('onlineList', onlineList);
   user.socket.broadcast.emit('onlineList', onlineList);
 };
 
 var setupSocket = function(user) {
   connections.setupSocket(user);
   
-  user.socket.on('onlineList', function() {
-    user.socket.emit('onlineList', onlineList);
-  });
+//  user.socket.on('onlineList', function() {
+//    user.socket.emit('onlineList', onlineList);
+//  }); 
+  //should be ok to remove this - don't ever have to ask for online list.
   
   user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
@@ -88,7 +91,7 @@ module.exports = function(server) {
   require('socketio-auth')(io, {
     authenticate: authenticate, 
     postAuthenticate: postAuthenticate,
-    timeout: 2000 //set to 1000 if possible
+    timeout: 5000 //set to 1000 if possible
   });
   
   // set up other socket stuff

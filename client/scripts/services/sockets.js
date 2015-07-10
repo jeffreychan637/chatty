@@ -5,11 +5,14 @@ angular.module('chatty').factory('sockets', function ($q) {
 
   var authenticate = function(socket, user) {
     var deferred = $q.defer();
+    socket.user = user.username; //maybe remove this - should probably remove this
     socket.emit('authentication', user);
     
-    socket.on('authorized', function() {
-      defineSocket(socket);
-      deferred.resolve();
+    socket.on('authenticated', function(authenticated) {
+      if (authenticated) {
+        defineSocket(socket);
+        deferred.resolve();
+      }
     });
     
     socket.on('unauthorized', function(err){
@@ -37,11 +40,14 @@ angular.module('chatty').factory('sockets', function ($q) {
     //define socket properties
     socket.on('onlineList', function(onlineList) {
       //run some kind of callback to index.js that causes the online list to be updated
-      console.log(onlineList);
+      console.log('onlineList: ' + onlineList);
+      console.log(socket.user);
     });
     
     socket.on('userList', function(userList) {
-      console.log('user list: ' + userList); 
+      console.log(userList);
+      console.log('user list: ' + userList);
+      console.log(socket.user);
     });
   };
   
@@ -51,7 +57,7 @@ angular.module('chatty').factory('sockets', function ($q) {
   
   var getOnlineList = function(socket) {
     console.log('emit onlineList');
-    socket.emit('onlineList');
+//    socket.emit('onlineList');
     //I don't think you should ever be getting online list...it should be sent to you automatically...
   };
 
