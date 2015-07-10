@@ -6,4 +6,4 @@
  * @author Jeffrey Chan
  */
 
-angular.module('chatty', []);
+angular.module('chatty', ['ngAnimate']);
