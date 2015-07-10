@@ -31,7 +31,6 @@ angular.module('chatty')
     var socket,
         data;
     $scope.userList = [];
-    var onlineList = [];
     
     $scope.$watch(function() {
                     console.log("checking data");
@@ -39,13 +38,42 @@ angular.module('chatty')
                   },
                   function() {
                     data = sockets.getData();
-                    $scope.userList = data.userList;
-                    onlineList = data.onlineList;
+                    $scope.onlineList = data.onlineList;
+                    if (data.userList && data.onlineList) {
+                      console.log('current userList: ' + data.userList);
+                      console.log('current onlineList: ' + data.onlineList);
+                      var index = data.userList.indexOf($scope.username);
+                      if (index > -1) {
+                        data.userList.splice(index, 1);
+                      }
+                      console.log('spliced userList: ' + data.userList);
+                      data.userList.sort(sortByOnline);
+                      $scope.userList = data.userList;
+                    }
                     console.log("saw change in data");
                     console.log(sockets.checkData());
-                    console.log($scope.userList);
+                    console.log("sorted: " + $scope.userList);
     }, true);
+  
+    var sortByOnline = function(a, b) {
+      var aOnline = contains($scope.onlineList, a);
+      var bOnline = contains($scope.onlineList, b);
+      if (aOnline && !bOnline) {
+        return -1;
+      } else if (!aOnline && bOnline) {
+        return 1; 
+      } else {
+        if (a < b) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+    }
     
+    var contains = function(array, value) {
+     return array.indexOf(value) > -1; 
+    }
     
     $scope.login = function() {
       if ($scope.username && $scope.password) {

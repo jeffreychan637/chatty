@@ -126,7 +126,8 @@
             </div>
 
             <div class="user-list">
-              <div class="user animate-repeat" ng-repeat="user in userList">
+              <div class="user animate-repeat" ng-repeat="user in userList" ng-class="{true: 'not-online'}[onlineList.indexOf(user) == -1]">
+                  <!-- The ng-class statement is saying to apply the 'not-online' class if the statement in the []'s is true -->
                   <div class="user-box">
                       <i class="fa fa-circle online"></i>
                       <span>{{user}}</span>
