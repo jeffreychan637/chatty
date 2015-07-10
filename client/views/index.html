@@ -124,7 +124,14 @@
                 </div>
             </div>
 
-            <div class="user-list">
+            <div class="user-list" ng-show="userList.length" ng-repeat="user in userList">
+              <div class="user">
+                  <div class="user-box">
+                      <i class="fa fa-circle online"></i>
+                      <span>{{user}}</span>
+                  </div>
+              </div>
+<!--
                 <div class="user not-online">
                     <div class="user-box">
                         <i class="fa fa-circle online"></i>
@@ -155,7 +162,10 @@
                         <span>Jeffrey Chan</span>
                     </div>
                 </div>
-            </div>            
+-->
+            </div>
+            <div class="user-list" ng-hide="userList.length">
+            </div>
         </div>
     </body>
 </html>

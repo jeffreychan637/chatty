@@ -27,9 +27,21 @@ angular.module('chatty')
         
 	
     });
-  
-    var socket;
     
+    var socket,
+        data;
+    $scope.userList = [];
+    var onlineList = [];
+    
+    $scope.$watch(sockets.checkData,
+                  function() {
+                    data = sockets.getData();
+                    $scope.userList = data.userList;
+                    onlineList = data.onlineList;
+                    console.log("saw change in data");
+                    console.log(sockets.checkData());
+                    console.log($scope.userList);
+    });
     
     
     $scope.login = function() {
@@ -72,7 +84,7 @@ angular.module('chatty')
           
     var getBasicInfo = function() {
         sockets.getBasicInfo(socket).then(
-          function() {
+          function(data) {
             modals.login.modal("hide");
           },
           function() {

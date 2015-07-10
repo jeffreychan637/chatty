@@ -2,7 +2,19 @@
 /*global $:false, FB:false, jQuery:false */
 
 angular.module('chatty').factory('sockets', function ($q) {
-
+  
+  var data = {};
+  
+  var getData = function() {
+    return data;
+  }
+  
+  var dataChanged = 0;
+  
+  var checkData = function() {
+    return dataChanged;
+  }
+  
   var authenticate = function(socket, user) {
     var deferred = $q.defer();
     socket.user = user.username; //maybe remove this - should probably remove this
@@ -29,9 +41,9 @@ angular.module('chatty').factory('sockets', function ($q) {
     
     //request online list
     //request latest conversations
-    getOnlineList(socket);
     
-    setTimeout(function() { deferred.resolve() }, 1000);
+    
+    setTimeout(function() { deferred.resolve(data) }, 1000);
     
     return deferred.promise;
   };
@@ -42,12 +54,16 @@ angular.module('chatty').factory('sockets', function ($q) {
       //run some kind of callback to index.js that causes the online list to be updated
       console.log('onlineList: ' + onlineList);
       console.log(socket.user);
+      data.onlineList = onlineList;
+      dataChanged += 1;
     });
     
-    socket.on('userList', function(userList) {
-      console.log(userList);
-      console.log('user list: ' + userList);
+    socket.on('userList', function(serverData) {
+      console.log('user list: ' + serverData);
       console.log(socket.user);
+      data.userList = serverData.userList;
+      dataChanged += 1;
+      console.log(dataChanged);
     });
   };
   
@@ -55,15 +71,17 @@ angular.module('chatty').factory('sockets', function ($q) {
     //get details on a conversation
   };
   
-  var getOnlineList = function(socket) {
-    console.log('emit onlineList');
-//    socket.emit('onlineList');
-    //I don't think you should ever be getting online list...it should be sent to you automatically...
-  };
+//  var getOnlineList = function(socket) {
+//    console.log('emit onlineList');
+////    socket.emit('onlineList');
+//    //I don't think you should ever be getting online list...it should be sent to you automatically...
+//  };
 
   return {
     authenticate: authenticate,
     getBasicInfo: getBasicInfo,
-    defineSocket: defineSocket
+    defineSocket: defineSocket,
+    getData: getData,
+    checkData: checkData,
   };
 });
