@@ -18,6 +18,8 @@ angular.module('chatty')
         var remainingHeight = leftover - $(".reply-box").height();
         console.log(remainingHeight);
         $(".conversation-box").css("height", remainingHeight.toString() + "px");
+		
+		autosize($('#new-message'));
     
 //    if ($("#y").height() > 21) {
 //        $(""
