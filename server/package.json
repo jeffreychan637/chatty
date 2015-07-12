@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "A simple chat application using socket.io and Firebase.",
   "dependencies": {
+    "body-parser": "^1.13.2",
     "express": "^4.12.4",
     "firebase": "^2.2.7",
     "socket.io": "^1.3.5",
