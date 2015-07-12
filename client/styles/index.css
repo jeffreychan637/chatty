@@ -78,7 +78,15 @@ i {
     display: block;
     margin: 0 auto;
     padding: 5px;
-    width: 525px;   
+    width: 525px;
+	resize: none;
+}
+.wide-modal .left-btn {
+	margin-left: 15px;
+}
+
+.wide-modal .right-btn {
+	margin-right: 15px;
 }
 
 .nav {
@@ -295,14 +303,14 @@ i {
 */
 
 .reply-box {
-    height: 80px;
+    min-height: 80px;
     background-color: #EF7125;
 }
 
 .reply {
-    height: 22px;
+    max-height: 335px;
     font-size:  18px;
-    margin: 18px 15px;
+    margin: 18px 15px 16px 15px;
     padding: 10px 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;

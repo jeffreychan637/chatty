@@ -20,6 +20,14 @@ angular.module('chatty')
         $(".conversation-box").css("height", remainingHeight.toString() + "px");
 		
 		autosize($('#new-message'));
+        autosize($('#reply'));
+        
+        $("#reply").on('autosize:resized', function() {
+            console.log('textarea height updated');
+            var remainingHeight = leftover - $(".reply-box").height();
+            console.log(remainingHeight);
+            $(".conversation-box").css("height", remainingHeight.toString() + "px");
+        });
     
 //    if ($("#y").height() > 21) {
 //        $(""
@@ -33,6 +41,8 @@ angular.module('chatty')
     var socket,
         data;
     $scope.userList = [];
+    $scope.loginMessage = 'Loading...';
+    $scope.loading = false;
     
     $scope.$watch(function() {
                     console.log("checking data");
@@ -78,11 +88,13 @@ angular.module('chatty')
     }
     
     $scope.login = function() {
+      $scope.loading = true;
       if ($scope.username && $scope.password) {
         var user = {
                     username: $scope.username,
                     password: $scope.password
                    };
+		$scope.password = null;
         socket = io();
         sockets.authenticate(socket, user).then(
           function() {
@@ -119,6 +131,9 @@ angular.module('chatty')
         sockets.getBasicInfo(socket).then(
           function(data) {
             modals.login.modal('hide');
+            setTimeout(function() {
+                        $scope.loading = false;
+                       }, 1000);
           },
           function() {
             console.log('get basic info failed');
@@ -135,5 +150,11 @@ angular.module('chatty')
     $scope.cancel = function() {
       modals.newConversation.modal('hide');
     };
+	
+	$scope.sendNewMessage = function() {
+		if ($scope.newRecipient && $scope.newMessage) {
+			console.log('sending new message!');
+		};
+	};
     
 });
