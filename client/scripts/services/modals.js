@@ -5,11 +5,15 @@ angular.module('chatty').factory('modals', function () {
 
   var login = $("#login").modal({
                 backdrop: 'static',
-                keyboard: false,
+                keyboard: false
               });
-    
+  
+  var newConversation = $("#new-conversation").modal({
+                          show: false
+                        });
 
   return {
-    login: login
+    login: login,
+    newConversation: newConversation
   };
 });

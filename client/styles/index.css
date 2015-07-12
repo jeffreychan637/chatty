@@ -17,8 +17,11 @@ input {
     display: block;
     margin: 0 auto;
     padding: 5px;
-    width: 250px;
-    
+    width: 250px;   
+}
+
+i {
+	cursor: pointer;
 }
 
 .btn {
@@ -62,6 +65,20 @@ input {
     color: white;
     border-bottom-left-radius: 25px;
     border-bottom-right-radius: 25px;
+}
+
+.wide-modal input {
+	width: 525px;
+}
+
+.wide-modal textarea {
+	border: solid 2px #EF7125;
+    outline: none;
+    font-size: 18px;
+    display: block;
+    margin: 0 auto;
+    padding: 5px;
+    width: 525px;   
 }
 
 .nav {

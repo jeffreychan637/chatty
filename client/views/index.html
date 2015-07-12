@@ -24,8 +24,8 @@
     </head>
     <body ng-controller="chattyCtrl">
         
-        <!-- Modal -->
-        <div id="login" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <!-- Login Modal -->
+        <div id="login" class="modal fade" id="myModal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -42,14 +42,34 @@
             </div>
           </div>
         </div>
-        <!-- End Modal -->
+        <!-- Login Modal -->
+      
+       <!-- Login Modal -->
+        <div id="new-conversation" class="modal fade" id="myModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="modal-title" id="myModalLabel">Send New Message</span>
+              </div>  
+              <div class="modal-body wide-modal">
+                <input placeholder="Recipient" type="text" class="top-input" ng-model="newRecipient" required>
+                <textarea placeholder="Message" ng-model="newMessage" required></textarea>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-default left" ng-click="cancel()">Cancel</button>
+                <button type="submit" class="btn btn-default" ng-click="">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Login Modal -->
 
         
         <div class="nav">
             <div class="chats-heading headings">
                 <span class="icon-wrap left"><i class="fa fa-sign-out sign-out icon"></i></span>
                 <span class="text-wrap"><b>Conversations</b></span>
-                <span class="icon-wrap right"><i class="fa fa-plus-circle icon"></i></span>
+                <span class="icon-wrap right"><i class="fa fa-plus-circle icon" ng-click="startNewConversation()"></i></span>
             </div>
             <div class="conversation-heading headings">
 <!--                <span class="online"> </span>-->

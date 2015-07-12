@@ -116,14 +116,22 @@ angular.module('chatty')
     var getBasicInfo = function() {
         sockets.getBasicInfo(socket).then(
           function(data) {
-            modals.login.modal("hide");
+            modals.login.modal('hide');
           },
           function() {
-            console.log("get basic info failed");
+            console.log('get basic info failed');
             //show some failure to load info; please refresh page message
           });
         //show some message saying loading info
             
+    };
+  
+    $scope.startNewConversation = function() {
+      modals.newConversation.modal('show');
+    };
+  
+    $scope.cancel = function() {
+      modals.newConversation.modal('hide');
     };
     
 });
