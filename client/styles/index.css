@@ -89,6 +89,13 @@ i {
 	margin-right: 15px;
 }
 
+.login-message {
+	color: #EF7125;
+	font-size: 18px;
+	text-align: center;
+	margin: 10px 0px;
+}
+
 .nav {
     font-weight: 700;
     font-size: 24px;

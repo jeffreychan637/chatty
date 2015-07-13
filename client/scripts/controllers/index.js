@@ -41,8 +41,8 @@ angular.module('chatty')
     var socket,
         data;
     $scope.userList = [];
-    $scope.loginMessage = 'Loading...';
     $scope.loading = false;
+	$scope.loginError = false;
     
     $scope.$watch(function() {
                     console.log("checking data");
@@ -88,13 +88,13 @@ angular.module('chatty')
     }
     
     $scope.login = function() {
+	  $scope.loginMessage = "Logging In...";
       $scope.loading = true;
       if ($scope.username && $scope.password) {
         var user = {
                     username: $scope.username,
                     password: $scope.password
                    };
-		$scope.password = null;
         socket = io();
         sockets.authenticate(socket, user).then(
           function() {
@@ -104,12 +104,13 @@ angular.module('chatty')
           function() {
             console.log("no");
             //show some failure message
-          });
-        //show some spinning wheel saying login happening      
+          });      
       }
     };
   
     $scope.signup = function() {
+		$scope.loginMessage = "Signing Up...";
+	    $scope.loading = true;
        if ($scope.username && $scope.password) {
         var user = {
                     username: $scope.username,
@@ -117,20 +118,21 @@ angular.module('chatty')
                    };
         server.postUserSignup(user).then(
           function () {
-            $scope.login(); //verift that $scope.username/pwd didn't get reset
+            $scope.login();
           },
           function () {
             //show some failure message (e.g. username taken)
             //go back to basic sign in page
+			$scope.loginError = true;
           });
-         //show some spinnning wheel saying sign up happening
       }
     }
           
     var getBasicInfo = function() {
+		$scope.loginMessage = "Loading Data...";
         sockets.getBasicInfo(socket).then(
           function(data) {
-            modals.login.modal('hide');
+//            modals.login.modal('hide');
             setTimeout(function() {
                         $scope.loading = false;
                        }, 1000);
@@ -139,9 +141,12 @@ angular.module('chatty')
             console.log('get basic info failed');
             //show some failure to load info; please refresh page message
           });
-        //show some message saying loading info
-            
     };
+	
+	$scope.restartLogin = function() {
+		$scope.loading = false;
+		$scope.loginError = false;
+	};
   
     $scope.startNewConversation = function() {
       modals.newConversation.modal('show');

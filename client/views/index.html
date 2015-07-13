@@ -35,14 +35,13 @@
               <div class="modal-body">
                 <input placeholder="Username" type="text" class="top-input" ng-model="username" required ng-hide="loading">
                 <input placeholder="Password" type="password" ng-model="password" required ng-hide="loading">
-                <span ng-show="loading">{{loginMessage}}</span>
+                <p class="login-message" ng-show="loading">{{loginMessage}}</p>
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-default left" ng-click="signup()" ng-hide="loading">Sign Up</button>
                 <button type="submit" class="btn btn-default" ng-click="login()" ng-hide="loading">Login</button>
                 
-                <button type="submit" class="btn btn-default left" ng-click="" ng-show="loading">Start Over</button>
-                <button type="submit" class="btn btn-default" ng-click="" ng-show="loading">Start Chatting!</button>
+                <button type="submit" class="btn btn-default" ng-click="restartLogin()" ng-show="loginError">Start Over</button>
               </div>
             </div>
           </div>
