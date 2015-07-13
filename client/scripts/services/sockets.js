@@ -11,6 +11,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
   
   var dataChanged = 0;
   
+  var notAuthenticated = true;
+  
   var checkData = function() {
     return dataChanged;
   }
@@ -18,19 +20,31 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
   var authenticate = function(socket, user) {
     var deferred = $q.defer();
     socket.user = user.username; //maybe remove this - should probably remove this
-    socket.emit('authentication', user);
+    console.log("authenticating");
+    
+    defineSocket(socket);
     
     socket.on('authenticated', function(authenticated) {
+      notAuthenticated = false;
       if (authenticated) {
-        defineSocket(socket);
         deferred.resolve();
       }
     });
     
     socket.on('unauthorized', function(err){
+      notAuthenticated = false;
       console.log("There was an error with the authentication:", err.message);
-      deferred.reject();
+      deferred.reject(err.message);
     });
+
+    socket.emit('authentication', user);
+    
+//    setInterval(function() {
+//                  if (notAuthenticated) {
+//                     socket.emit('authentication', user);
+//                     console.log("trying login again");
+//                  }
+//                }, 3000);
     
     return deferred.promise;
   }
@@ -78,6 +92,10 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
 ////    socket.emit('onlineList');
 //    //I don't think you should ever be getting online list...it should be sent to you automatically...
 //  };
+  
+  var disconnect = function(socket) {
+    socket.emit('disconnect');
+  };
 
   return {
     authenticate: authenticate,
@@ -85,5 +103,6 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     defineSocket: defineSocket,
     getData: getData,
     checkData: checkData,
+    disconnect: disconnect
   };
 });
