@@ -224,6 +224,10 @@ angular.module('chatty')
         }
         $scope.replyMessage = '';
         $scope.currConversationList.push(message);
+        setTimeout(function() {
+            $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
+            console.log('now running');
+            }, 1000);
         //make sure also to append to original conversation list
         //send message via socket
       }
