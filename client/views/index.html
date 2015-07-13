@@ -120,12 +120,18 @@
 
             <div class="conversation">
                 <div class="conversation-box">
-                    <span class="from message">Yolo</span>
-                    <br>
-                    <span class="to message bigger">Yolo <br> asdas</span>
-                    <br>
-                    <span class="from message bigger">Yolo <br> adas <br> sads</span>
-                    <br>
+                    <div class="animate-repeat" ng-repeat="message in currConversationList">
+                        <span class="message" ng-class="{true: 'from', false: 'to'}[username == message.sender]">{{message.content}}</span>
+                        <br>
+                    </div>
+                    <div>
+                        <span class="to message bigger">Yolo <br> asdas</span>
+                        <br>
+                    </div>
+                    <div>
+                        <span class="from message bigger">Yolo <br> adas <br> sads</span>
+                        <br>
+                    </div>
                     <span class="to message">Yolo</span>
                     <br>
                     <span class="from message">Yolo</span>

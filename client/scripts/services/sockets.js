@@ -39,12 +39,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
 
     socket.emit('authentication', user);
     
-//    setInterval(function() {
-//                  if (notAuthenticated) {
-//                     socket.emit('authentication', user);
-//                     console.log("trying login again");
-//                  }
-//                }, 3000);
+    setInterval(function() {
+                 if (notAuthenticated) {
+                    socket.emit('authentication', user);
+                    console.log("trying login again");
+                 }
+               }, 3000);
     
     return deferred.promise;
   }

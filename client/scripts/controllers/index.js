@@ -44,6 +44,29 @@ angular.module('chatty')
     $scope.userList = [];
     $scope.loading = false;
     $scope.loginError = false;
+
+    $scope.currConversationList = [
+      {
+        sender: 'w',
+        content: 'yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
+      },
+      {
+        sender: 'w',
+        content: 'yolo'
+      },
+      {
+        sender: 'u',
+        content: 'yolo'
+      },
+      {
+        sender: 'w',
+        content: 'yolo'
+      },
+      {
+        sender: 'u',
+        content: 'yolo yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
+      }
+    ];
     
     $scope.$watch(function() {
                     console.log('checking data');
