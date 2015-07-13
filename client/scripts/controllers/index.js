@@ -22,23 +22,23 @@ angular.module('chatty')
 
         autosize($('#new-message'));
         autosize($('#reply'));
-        
+
         $('#reply').on('autosize:resized', function() {
             console.log('textarea height updated');
             var remainingHeight = leftover - $('.reply-box').height();
             console.log(remainingHeight);
             $('.conversation-box').css('height', remainingHeight.toString() + 'px');
         });
-    
+
 //    if ($('#y').height() > 21) {
 //        $('
 //    };
-    
+
 //    $('body').css('max-height', windowHeight.toString() + 'px');
-        
-	
+
+
     });
-    
+
     var socket,
         data;
     $scope.userList = [];
@@ -67,9 +67,8 @@ angular.module('chatty')
         content: 'yolo yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
       }
     ];
-    
+
     $scope.$watch(function() {
-                    console.log('checking data');
                     return sockets.checkData();
                   },
                   function() {
@@ -90,7 +89,7 @@ angular.module('chatty')
                     console.log(sockets.checkData());
                     console.log('sorted: ' + $scope.userList);
     }, true);
-  
+
     var sortByOnline = function(a, b) {
       var aOnline = contains($scope.onlineList, a);
       var bOnline = contains($scope.onlineList, b);
@@ -106,16 +105,11 @@ angular.module('chatty')
         }
       }
     };
-    
+
     var contains = function(array, value) {
       return array.indexOf(value) > -1;
     };
-    
-    var reload = function(src) {
-      $('script[src=' + src + ']').remove();
-      $('<script>').attr('src', src + '?cachebuster='+ new Date().getTime()).appendTo('head');
-    };
-    
+
     $scope.login = function() {
       $scope.loginMessage = 'Logging In...';
       $scope.loading = true;
@@ -139,11 +133,11 @@ angular.module('chatty')
             }
             sockets.disconnect(socket);
             $scope.loginError = true;
-            reload('//cdn.socket.io/socket.io-1.3.5.js');
-          });      
+            sockets.reload('//cdn.socket.io/socket.io-1.3.5.js');
+          });
       }
     };
-  
+
     $scope.signup = function() {
       $scope.loginMessage = 'Signing Up...';
       $scope.loading = true;
@@ -168,7 +162,7 @@ angular.module('chatty')
           });
       }
     };
-          
+
     var getBasicInfo = function() {
       $scope.loginMessage = 'Loading Data...';
       sockets.getBasicInfo(socket).then(
@@ -193,14 +187,43 @@ angular.module('chatty')
     $scope.startNewConversation = function() {
       modals.newConversation.modal('show');
     };
-  
+
     $scope.cancel = function() {
       modals.newConversation.modal('hide');
     };
 
     $scope.sendNewMessage = function() {
-      if ($scope.newRecipient && $scope.newMessage) {
-        console.log('sending new message!');
+      if ($scope.newRecipient && $scope.newMessage.trim()) {
+        if contains($scope.userList, $scope.newRecipient) {
+          console.log('sending new message!');
+          var conversation = {
+            firstUser: $scope.user,
+            secondUser: $scope.newRecipient,
+            firstUserPostsUnread: 0,
+            secondUserPostsUnread: 1,
+            message: {
+              time: Date.now(),
+              sender: $scope.username,
+              content: $scope.replyMessage.trim()
+            }
+          }
+          //send conversation to server via socket
+        } else {
+          //display some invalid user message
+        }
+      }
+    };
+
+    $scope.sendMessage = function(event) {
+      if (!event.shiftKey && event.keyCode == 13 && $scope.replyMessage) {
+        event.preventDefault();
+        var message = {
+          time: Date.now(),
+          sender: $scope.username,
+          content: $scope.replyMessage.trim()
+        }
+        $scope.replyMessage = '';
+        //send message via socket
       }
     };
 

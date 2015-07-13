@@ -24,14 +24,14 @@
         <script src="scripts/controllers/index.js" type="text/javascript"></script>
     </head>
     <body ng-controller="chattyCtrl">
-        
+
         <!-- Login Modal -->
         <div id="login" class="modal fade" id="myModal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <span class="modal-title" id="myModalLabel">Login or Sign Up</span>
-              </div>  
+              </div>
               <div class="modal-body">
                 <input placeholder="Username" type="text" class="top-input" ng-model="username" required ng-hide="loading">
                 <input placeholder="Password" type="password" ng-model="password" required ng-hide="loading">
@@ -40,21 +40,21 @@
               <div class="modal-footer">
                 <button type="submit" class="btn btn-default left" ng-click="signup()" ng-hide="loading">Sign Up</button>
                 <button type="submit" class="btn btn-default" ng-click="login()" ng-hide="loading">Login</button>
-                
+
                 <button type="submit" class="btn btn-default" ng-click="restartLogin()" ng-show="loginError">Try Again</button>
               </div>
             </div>
           </div>
         </div>
         <!-- Login Modal -->
-      
+
         <!-- New Conversation Modal -->
         <div id="new-conversation" class="modal fade" id="myModal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content wide-modal">
               <div class="modal-header">
                 <span class="modal-title" id="myModalLabel">Send New Message</span>
-              </div>  
+              </div>
               <div class="modal-body">
                 <input placeholder="Recipient" type="text" class="top-input" ng-model="newRecipient" required>
                 <textarea id="new-message" placeholder="Message" ng-model="newMessage" required></textarea>
@@ -68,7 +68,7 @@
         </div>
         <!-- New Conversation Modal -->
 
-        
+
         <div class="nav">
             <div class="chats-heading headings">
                 <span class="icon-wrap left"><i class="fa fa-sign-out sign-out icon" ng-click="logout()"></i></span>
@@ -132,26 +132,9 @@
                         <span class="from message bigger">Yolo <br> adas <br> sads</span>
                         <br>
                     </div>
-                    <span class="to message">Yolo</span>
-                    <br>
-                    <span class="from message">Yolo</span>
-                    <br>
-                    <span class="to message bigger">Yolo <br> asdas</span>
-                    <br>
-                    <span class="from message bigger">Yolo <br> adas <br> sads</span>
-                    <br>
-                    <span class="to message">Yolo</span>
-                    <br>
-                    <span class="from message">Yolo</span>
-                    <br>
-                    <span class="to message bigger">Yolo <br> asdas</span>
-                    <br>
-                    <span class="from message bigger">Yolo <br> adas <br> sads</span>
-                    <br>
-                    <span class="to message">Yolo</span>
                 </div>
                 <div class="reply-box">
-                    <textarea id="reply" rows="1" class="reply"></textarea>
+                    <textarea id="reply" rows="1" class="reply" ng-keydown="sendMessage($event)" ng-model="replyMessage"></textarea>
                 </div>
             </div>
 
