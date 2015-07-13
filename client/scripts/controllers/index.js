@@ -178,5 +178,9 @@ angular.module('chatty')
 			console.log('sending new message!');
 		};
 	};
+  
+    $scope.logout = function() {
+      location.reload(true);
+    }
     
 });
