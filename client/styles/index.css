@@ -17,7 +17,7 @@ input {
     display: block;
     margin: 0 auto;
     padding: 5px;
-    width: 250px;   
+    width: 250px;
 }
 
 i {
@@ -31,19 +31,19 @@ i {
 }
 
 .top-input {
-    margin-bottom: 15px;   
+    margin-bottom: 15px;
 }
 
 ::-webkit-input-placeholder {
    color: #EF7125;
 }
 
-::-moz-placeholder {   Firefox 19+ 
+::-moz-placeholder {   Firefox 19+
    color: #EF7125;
 }
 
-:-ms-input-placeholder {  
-   color: #EF7125; 
+:-ms-input-placeholder {
+   color: #EF7125;
 }
 
 .modal-content {
@@ -128,7 +128,7 @@ i {
 }
 
 .icon-wrap {
-    width: 15%;   
+    width: 15%;
 }
 
 .left {
@@ -140,22 +140,22 @@ i {
 }
 
 .text-wrap  {
-    width: 70%;   
+    width: 70%;
 }
 
 .icon {
-    font-size: 26px;   
+    font-size: 26px;
 }
 
 .middle-icon-wrap {
-    width: 5%;   
+    width: 5%;
 }
 
 .middle-text-wrap {
     width: 90%;
 }
 
-.sign-out { 
+.sign-out {
     -moz-transform: scale(-1, 1);
     -webkit-transform: scale(-1, 1);
     -o-transform: scale(-1, 1);
@@ -206,7 +206,7 @@ i {
 }
 
 .chat-piece {
-    margin-top: 10px;   
+    margin-top: 10px;
 }
 
 .chat-latest {
@@ -263,13 +263,12 @@ i {
 }
 
 .from.bigger:before {
-    top: 18px;   
+    top: 18px;
 }*/
 
 .from {
     background-color: #EF7125;
     color: white;
-    text-align: left;
 }
 
 .to {
@@ -308,6 +307,10 @@ i {
     left: 72px;
 }
 */
+
+.clear {
+    clear: both;
+}
 
 .reply-box {
     min-height: 80px;
@@ -351,7 +354,7 @@ i {
 }
 
 .user-box {
-    margin-left: 2.2em;   
+    margin-left: 2.2em;
 }
 
 .online {

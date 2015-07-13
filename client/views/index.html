@@ -121,17 +121,17 @@
             <div class="conversation">
                 <div class="conversation-box">
                     <div class="animate-repeat" ng-repeat="message in currConversationList">
-                        <span class="message" ng-class="{true: 'from', false: 'to'}[username == message.sender]">{{message.content}}</span>
-                        <br>
+                        <span class="message" ng-class="{false: 'from', true: 'to'}[username == message.sender]">{{message.content}}</span>
+                        <br class="clear">
                     </div>
-                    <div>
+                    <!-- <div>
                         <span class="to message bigger">Yolo <br> asdas</span>
                         <br>
                     </div>
                     <div>
                         <span class="from message bigger">Yolo <br> adas <br> sads</span>
                         <br>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="reply-box">
                     <textarea id="reply" rows="1" class="reply" ng-keydown="sendMessage($event)" ng-model="replyMessage"></textarea>
