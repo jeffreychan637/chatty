@@ -16,6 +16,10 @@ var removeFromList = function(list, value) {
   return list
 };
 
+var contains = function(array, value) {
+  return array.indexOf(value) > -1; 
+}
+
 var createUser = function(user, callback, responseObject) {
 
   firebaseRef.createUser({
@@ -43,7 +47,13 @@ var authenticate = function(userLogin, callback) {
     password : userLogin.password
   }, function(error, authData) {
     if (error) {
-      callback(error, false);
+      var errorMessage = error.code.toLowerCase();
+      if (contains(errorMessage, "invalid") || contains(errorMessage, "exist")) {
+        callback(new Error("User Error"), false);
+      } else {
+        callback(new Error("Server Error"), false);
+      }
+      console.log(error.code);
     } else {
       console.log("Authenticated successfully with payload:", authData);
       callback(null, true);
@@ -60,7 +70,7 @@ var postAuthenticate = function(socket, data) {
   };
   console.log('user has been authorized');
   setupSocket(user);
-  if (onlineList.indexOf(user.username) == -1) {
+  if (!contains(onlineList, user.username)) {
     onlineList.push(user.username);
   }
   console.log(onlineList);
@@ -79,6 +89,7 @@ var setupSocket = function(user) {
   user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
     console.log(onlineList);
+    console.log("disconnected");
     user.socket.broadcast.emit('onlineList', onlineList);
     //do some other cleanup? - actually setup cleanup in the connections file
   });
@@ -90,7 +101,7 @@ module.exports = function(server) {
   require('socketio-auth')(io, {
     authenticate: authenticate, 
     postAuthenticate: postAuthenticate,
-    timeout: 5000 //set to 1000 if possible
+    timeout: 2000 //set to 1000 if possible
   });
   
   // set up other socket stuff

@@ -31,6 +31,6 @@ var sendResponse = function(error, success, res) {
   if (success) {
     res.status(200).send();
   } else {
-    res.status(500).send('Internal Server Error: ' + error);
+    res.status(500).send(error);
   }
 };

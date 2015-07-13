@@ -20,7 +20,7 @@ angular.module('chatty').factory('server', function ($http, $q) {
             }
           }).error(function (message, status) {
             console.debug(status, message);
-            deferred.reject();
+            deferred.reject(message);
           });
     return deferred.promise;
   };

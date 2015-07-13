@@ -87,6 +87,11 @@ angular.module('chatty')
      return array.indexOf(value) > -1; 
     }
     
+    var reload = function(src) {
+        $('script[src="' + src + '"]').remove();
+        $('<script>').attr('src', src + '?cachebuster='+ new Date().getTime()).appendTo('head');
+    }
+    
     $scope.login = function() {
 	  $scope.loginMessage = "Logging In...";
       $scope.loading = true;
@@ -101,9 +106,16 @@ angular.module('chatty')
             console.log("yes");
             getBasicInfo();
           }, 
-          function() {
+          function(error) {
             console.log("no");
-            //show some failure message
+            if (error == "User Error") { 
+              $scope.loginMessage = "Invalid Username/Password Combination";
+            } else {
+              $scope.loginMessage = "There was a server problem with logging in."; 
+            }
+            sockets.disconnect(socket);
+		    $scope.loginError = true;
+            reload("//cdn.socket.io/socket.io-1.3.5.js");
           });      
       }
     };
@@ -120,9 +132,14 @@ angular.module('chatty')
           function () {
             $scope.login();
           },
-          function () {
+          function (errorMessage) {
             //show some failure message (e.g. username taken)
             //go back to basic sign in page
+            if (contains(errorMessage.code.toLowerCase(), 'taken')) {
+              $scope.loginMessage = "This username has already been taken."
+            } else {
+              $scope.loginMessage = "There was a server problem with signing up." 
+            }
 			$scope.loginError = true;
           });
       }
@@ -132,7 +149,7 @@ angular.module('chatty')
 		$scope.loginMessage = "Loading Data...";
         sockets.getBasicInfo(socket).then(
           function(data) {
-//            modals.login.modal('hide');
+            modals.login.modal('hide');
             setTimeout(function() {
                         $scope.loading = false;
                        }, 1000);
