@@ -194,7 +194,7 @@ angular.module('chatty')
 
     $scope.sendNewMessage = function() {
       if ($scope.newRecipient && $scope.newMessage.trim()) {
-        if contains($scope.userList, $scope.newRecipient) {
+        if (contains($scope.userList, $scope.newRecipient)) {
           console.log('sending new message!');
           var conversation = {
             firstUser: $scope.user,
@@ -223,6 +223,8 @@ angular.module('chatty')
           content: $scope.replyMessage.trim()
         }
         $scope.replyMessage = '';
+        $scope.currConversationList.push(message);
+        //make sure also to append to original conversation list
         //send message via socket
       }
     };
