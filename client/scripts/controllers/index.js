@@ -165,6 +165,20 @@ angular.module('chatty')
       }
     };
 
+    $scope.validUsername = function(event) {
+      if (event.keyCode > 47 && event.keyCode < 58) {
+        if (event.shiftKey) {
+          event.preventDefault();
+        }
+      } else if (event.keyCode > 64 && event.keyCode < 91) {
+        return
+      } else if (event.keyCode > 95 && event.keyCode < 106) {
+        return
+      } else if (event.keyCode != 8 && event.keyCode != 9) {
+        event.preventDefault();
+      }
+    };
+
     var getBasicInfo = function() {
       $scope.loginMessage = 'Loading Data...';
       sockets.getBasicInfo(socket).then(

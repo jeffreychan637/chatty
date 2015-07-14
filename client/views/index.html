@@ -34,7 +34,7 @@
                 <span class="modal-title" id="modal-title">Login or Sign Up</span>
               </div>
               <div class="modal-body">
-                <input placeholder="Username" type="text" class="top-input" ng-model="username" required ng-hide="loading">
+                <input placeholder="Username" type="text" class="top-input" ng-model="username" required ng-hide="loading" ng-keydown="validUsername($event)">
                 <input placeholder="Password" type="password" ng-model="password" required ng-hide="loading">
                 <p class="login-message" ng-show="loading">{{loginMessage}}</p>
               </div>
