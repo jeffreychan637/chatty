@@ -29,14 +29,6 @@ angular.module('chatty')
             console.log(remainingHeight);
             $('.conversation-box').css('height', remainingHeight.toString() + 'px');
         });
-
-//    if ($('#y').height() > 21) {
-//        $('
-//    };
-
-//    $('body').css('max-height', windowHeight.toString() + 'px');
-
-
     });
 
     var socket,
@@ -69,7 +61,6 @@ angular.module('chatty')
     ];
 
     $scope.conversationsList = [];
-
 
     $scope.$watch(function() {
                     return sockets.checkData();
@@ -155,8 +146,6 @@ angular.module('chatty')
             $scope.login();
           },
           function (errorMessage) {
-            //show some failure message (e.g. username taken)
-            //go back to basic sign in page
             if (contains(errorMessage.code.toLowerCase(), 'taken')) {
               $scope.loginMessage = 'This username has already been taken.';
             } else {
@@ -219,7 +208,6 @@ angular.module('chatty')
           $scope.newRecipient = '';
           $scope.newMessage = '';
         } else {
-          //display some invalid user message
           var newRecipient = $scope.newRecipient;
           $scope.newRecipient += ' does not exist!';
           showError($('#new-recipient'));
@@ -252,8 +240,8 @@ angular.module('chatty')
             $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
             console.log('now running');
             }, 1000);
+        sockets.sendMessage(socket, message);
         //make sure also to append to original conversation list
-        //send message via socket
       }
     };
 
