@@ -63,7 +63,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
       notAuthenticated = false;
       if (authenticated) {
         console.log('authenticated');
-        deferred.resolve();
+        deferred.resolve(socket);
       }
     });
 
@@ -97,6 +97,14 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     //get details on a conversation
   };
 
+  var sendConversation = function(socket) {
+
+  };
+
+  var sendMessage = function(socket) {
+
+  };
+
 //  var getOnlineList = function(socket) {
 //    console.log('emit onlineList');
 ////    socket.emit('onlineList');
@@ -114,6 +122,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     defineSocket: defineSocket,
     getData: getData,
     checkData: checkData,
+    sendConversation: sendConversation,
+    sendMessage: sendMessage,
     disconnect: disconnect
   };
 });
