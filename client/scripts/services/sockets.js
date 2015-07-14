@@ -97,11 +97,11 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     //get details on a conversation
   };
 
-  var sendConversation = function(socket) {
-
+  var sendConversation = function(socket, conversation) {
+    socket.emit('conversation', conversation);
   };
 
-  var sendMessage = function(socket) {
+  var sendMessage = function(socket, message, conversationID) {
 
   };
 
