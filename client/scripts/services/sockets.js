@@ -91,18 +91,28 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
       console.log(dataChanged);
       $rootScope.$apply();
     });
+
+    socket.on()
   };
 
   var getConversation = function(socket) {
-    //get details on a conversation
+    socket.emit('getConversations', )
+    //provide some id so server knows where in the list you are
+  };
+
+  var getMessages = function(socket) {
+    socket.emit('getMessages', {})
+    //provide some id so server knows where in the list you are
+    //provide conversation id too
   };
 
   var sendConversation = function(socket, conversation) {
     socket.emit('conversation', conversation);
   };
 
-  var sendMessage = function(socket, message, conversationID) {
-
+  var sendMessage = function(socket, message, conversationId) {
+    socket.emit('message', {message: message,
+                            conversationId: conversationId});
   };
 
 //  var getOnlineList = function(socket) {
@@ -122,6 +132,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     defineSocket: defineSocket,
     getData: getData,
     checkData: checkData,
+    getConversation: getConversation,
+    getMessages: getMessages,
     sendConversation: sendConversation,
     sendMessage: sendMessage,
     disconnect: disconnect
