@@ -2,7 +2,7 @@
 /*global $:false, io:false, autosize:false */
 
 angular.module('chatty')
-  .controller('chattyCtrl', function ($scope, $document, server, modals, sockets) {
+  .controller('chattyCtrl', function ($scope, $document, $timeout, server, modals, sockets, chats) {
     $document.ready(function() {
 
         var windowHeight = $(window).height();
@@ -68,6 +68,9 @@ angular.module('chatty')
       }
     ];
 
+    $scope.conversationsList = [];
+
+
     $scope.$watch(function() {
                     return sockets.checkData();
                   },
@@ -120,7 +123,8 @@ angular.module('chatty')
                    };
         socket = io();
         sockets.authenticate(socket, user).then(
-          function() {
+          function(returnedSocket) {
+            socket = returnedSocket;
             console.log('yes');
             getBasicInfo();
           },
@@ -168,9 +172,9 @@ angular.module('chatty')
       sockets.getBasicInfo(socket).then(
         function(data) {
           modals.login.modal('hide');
-          setTimeout(function() {
-                        $scope.loading = false;
-                     }, 1000);
+          $timeout(function() {
+                    $scope.loading = false;
+                  }, 1000);
           //do something with loaded data
         },
         function() {
@@ -193,25 +197,45 @@ angular.module('chatty')
     };
 
     $scope.sendNewMessage = function() {
-      if ($scope.newRecipient && $scope.newMessage.trim()) {
-        if (contains($scope.userList, $scope.newRecipient)) {
+      if ($scope.newRecipient && $scope.newMessage) {
+        if (contains($scope.userList, $scope.newRecipient)
+            || $scope.newRecipient == $scope.username) {
           console.log('sending new message!');
           var conversation = {
             firstUser: $scope.user,
             secondUser: $scope.newRecipient,
             firstUserPostsUnread: 0,
             secondUserPostsUnread: 1,
-            message: {
-              time: Date.now(),
-              sender: $scope.username,
-              content: $scope.replyMessage.trim()
-            }
+            messages: [
+              {
+                time: Date.now(),
+                sender: $scope.username,
+                content: $scope.newMessage.trim()
+              }
+            ]
           }
-          //send conversation to server via socket
+          sockets.sendConversation(socket, conversation);
+          modals.newConversation.modal('hide');
+          $scope.newRecipient = '';
+          $scope.newMessage = '';
         } else {
           //display some invalid user message
+          var newRecipient = $scope.newRecipient;
+          $scope.newRecipient += ' does not exist!';
+          showError($('#new-recipient'));
+          $timeout(function() {
+            $scope.newRecipient = newRecipient;
+          }, 1000);
         }
       }
+    };
+
+    var showError = function(element) {
+      var origColor = element.css('color');
+      element.css('color', 'red');
+      $timeout(function() {
+        element.css('color', origColor);
+      }, 1000);
     };
 
     $scope.sendMessage = function(event) {
@@ -224,7 +248,7 @@ angular.module('chatty')
         }
         $scope.replyMessage = '';
         $scope.currConversationList.push(message);
-        setTimeout(function() {
+        $timeout(function() {
             $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
             console.log('now running');
             }, 1000);
