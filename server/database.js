@@ -7,8 +7,14 @@ var firebaseRef = new Firebase(secrets.firebaseUrl);
 var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 
-var getUserConversations = function(amount) {
+var getConversations = function(id, amount) {
 
+  return []
+};
+
+var getMessages = function(request, amount) {
+
+  return [];
 };
 
 var addUser = function(username) {
@@ -37,9 +43,10 @@ var getUserListSetup = function(user) {
     console.log("The read failed: " + errorObject.code);
   });
 }
-              
+
 module.exports = {
-  getUserConversations: getUserConversations,
+  getConversations: getConversations,
+  getMessages: getMessages,
   addUser: addUser,
   getUserListSetup: getUserListSetup
 };

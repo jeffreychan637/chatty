@@ -95,7 +95,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     socket.on()
   };
 
-  var getConversation = function(socket) {
+  var getConversations = function(socket) {
     socket.emit('getConversations', )
     //provide some id so server knows where in the list you are
   };
@@ -132,7 +132,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     defineSocket: defineSocket,
     getData: getData,
     checkData: checkData,
-    getConversation: getConversation,
+    getConversations: getConversations,
     getMessages: getMessages,
     sendConversation: sendConversation,
     sendMessage: sendMessage,
