@@ -16,12 +16,17 @@ angular.module('chatty').factory('chats', function () {
   };
 
   var getLatest = function(messages) {
-    return messages[messages.length - 1].contents
+    console.log(messages);
+    var latestMessage = messages[messages.length - 1];
+    console.log(latestMessage);
+    return {message: latestMessage.content,
+            time: getTime(latestMessage.time)
+           }
   };
 
-  var getTime = function(message) {
-    var unixTime = message.time;
-    var messageTime = new Date(unixTime * 1000);
+  var getTime = function(unixTime) {
+    var messageTime = new Date(unixTime);
+    console.log(messageTime);
     var curTime = new Date();
     if (curTime.getDate() == messageTime.getDate()
         && curTime.getMonth() == messageTime.getMonth()
@@ -33,9 +38,11 @@ angular.module('chatty').factory('chats', function () {
   };
 
   var getConversationInfo = function(chat, user) {
+    console.log(chat);
     var newChat = getRecipientandUnread(chat, user);
-    newChat.latestMessage = getLatest(chat.messages);
-    newChat.date = getTime(newChat.latestMessage);
+    var latest = getLatest(chat.messages);
+    newChat.time = latest.time;
+    newChat.latestMessage = latest.message;
     newChat.messages = chat.messages;
     return newChat;
   };

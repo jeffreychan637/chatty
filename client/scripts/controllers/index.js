@@ -61,8 +61,8 @@ angular.module('chatty')
     ];
 
     $scope.currConversation = {
-      id: null,
-      date: null,
+      id: null, //need this?
+      time: null,
       recipient: 'q',
       latestMessage: null,
       unread: null,
@@ -196,11 +196,10 @@ angular.module('chatty')
 
     $scope.sendNewMessage = function() {
       if ($scope.newRecipient && $scope.newMessage) {
-        if (contains($scope.userList, $scope.newRecipient)
-            || $scope.newRecipient == $scope.username) {
+        if (contains($scope.userList, $scope.newRecipient)) {
           console.log('sending new message!');
           var conversation = {
-            firstUser: $scope.user,
+            firstUser: $scope.username,
             secondUser: $scope.newRecipient,
             firstUserPostsUnread: 0,
             secondUserPostsUnread: 1,
@@ -213,12 +212,17 @@ angular.module('chatty')
             ]
           }
           sockets.sendConversation(socket, conversation);
+          $scope.currConversation = chats.getConversationInfo(conversation, $scope.username);
+          $scope.conversationsList.unshift($scope.currConversation);
+          console.log($scope.conversationsList);
           modals.newConversation.modal('hide');
-          $scope.newRecipient = '';
-          $scope.newMessage = '';
+          $timeout(function() {
+            $scope.newRecipient = '';
+            $scope.newMessage = '';
+          }, 1000)
         } else {
           var newRecipient = $scope.newRecipient;
-          $scope.newRecipient += ' does not exist!';
+          $scope.newRecipient += ' is not a valid user!';
           showError($('#new-recipient'));
           $timeout(function() {
             $scope.newRecipient = newRecipient;
@@ -244,7 +248,7 @@ angular.module('chatty')
           content: $scope.replyMessage.trim()
         }
         $scope.replyMessage = '';
-        $scope.currConversationList.push(message);
+        $scope.currConversation.messages.push(message);
         $timeout(function() {
             $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
             console.log('now running');

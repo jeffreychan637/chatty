@@ -95,13 +95,13 @@
                     <div class="chat-title">
                         <b>
                             <span class="chat-person">{{conversation.recipient}}</span>
-                            <span class="chat-date">{{conversation.date}}</span>
+                            <span class="chat-date">{{conversation.time}}</span>
                         </b>
                     </div>
                     <br>
                     <div class="chat-piece">
                         <span class="chat-latest">{{conversation.latestMessage}}</span>
-                        <span class="chat-count" ng-show="getUnread(conversation)">{{conversation.unread}}</span>
+                        <span class="chat-count" ng-show="conversation.unread">{{conversation.unread}}</span>
                     </div>
                 </div>
                 <div class="chat">
