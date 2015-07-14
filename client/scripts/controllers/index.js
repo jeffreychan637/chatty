@@ -32,7 +32,8 @@ angular.module('chatty')
     });
 
     var socket,
-        data;
+        data,
+        latestConversationId;
     $scope.userList = [];
     $scope.loading = false;
     $scope.loginError = false;
@@ -61,7 +62,7 @@ angular.module('chatty')
     ];
 
     $scope.currConversation = {
-      id: null, //need this?
+      id: null, //need this to tell what message conversation belongs to when sent
       time: null,
       recipient: 'q',
       latestMessage: null,
@@ -84,7 +85,6 @@ angular.module('chatty')
                       if (index > -1) {
                         data.userList.splice(index, 1);
                       }
-                      console.log('spliced userList: ' + data.userList);
                       data.userList.sort(sortByOnline);
                       $scope.userList = data.userList;
                     }
@@ -174,6 +174,7 @@ angular.module('chatty')
                     $scope.loading = false;
                   }, 1000);
           //do something with loaded data
+          latestConversationId = 5; //REMOVE THIS
         },
         function() {
           console.log('get basic info failed');
@@ -199,6 +200,7 @@ angular.module('chatty')
         if (contains($scope.userList, $scope.newRecipient)) {
           console.log('sending new message!');
           var conversation = {
+            id: latestConversationId + 1,
             firstUser: $scope.username,
             secondUser: $scope.newRecipient,
             firstUserPostsUnread: 0,
@@ -253,13 +255,11 @@ angular.module('chatty')
             $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
             console.log('now running');
             }, 1000);
-        sockets.sendMessage(socket, message);
-        //make sure also to append to original conversation list
+        sockets.sendMessage(socket, message, $scope.currConversation.id);
       }
     };
 
     $scope.updateConversation = function(index) {
-      console.debug(index);
       $scope.currConversation = $scope.conversationsList[index];
     };
 

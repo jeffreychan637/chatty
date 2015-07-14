@@ -43,6 +43,7 @@ angular.module('chatty').factory('chats', function () {
     var latest = getLatest(chat.messages);
     newChat.time = latest.time;
     newChat.latestMessage = latest.message;
+    newChat.id = chat.id;
     newChat.messages = chat.messages;
     return newChat;
   };
