@@ -258,6 +258,11 @@ angular.module('chatty')
       }
     };
 
+    $scope.updateConversation = function(index) {
+      console.debug(index);
+      $scope.currConversation = $scope.conversationsList[index];
+    };
+
     $scope.logout = function() {
       location.reload(true);
     };

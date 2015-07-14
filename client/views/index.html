@@ -91,7 +91,7 @@
         </div>
         <div class="content">
             <div class="chats">
-                <div class="chat" ng-repeat="conversation in conversationsList">
+                <div class="chat" ng-repeat="conversation in conversationsList" ng-click="updateConversation($index)">
                     <div class="chat-title">
                         <b>
                             <span class="chat-person">{{conversation.recipient}}</span>
