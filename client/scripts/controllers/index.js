@@ -37,7 +37,7 @@ angular.module('chatty')
     $scope.loading = false;
     $scope.loginError = false;
 
-    $scope.currConversationList = [
+    var messagesExample = [
       {
         sender: 'w',
         content: 'yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
@@ -59,6 +59,15 @@ angular.module('chatty')
         content: 'yolo yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
       }
     ];
+
+    $scope.currConversation = {
+      id: null,
+      date: null,
+      recipient: 'q',
+      latestMessage: null,
+      unread: null,
+      messages: messagesExample
+    }
 
     $scope.conversationsList = [];
 
