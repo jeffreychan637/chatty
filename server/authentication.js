@@ -7,13 +7,27 @@ var Firebase = require('firebase'),
 var firebaseRef = new Firebase(secrets.firebaseUrl);
 
 var onlineList = [];
+var socketList = [];
 
-var removeFromList = function(list, value) {
+var removeStringFromList = function(list, value) {
   var index = list.indexOf(value);
   if (index !== -1) {
    list.splice(index, 1);
   }
   return list
+};
+
+//TEST THIS
+removeObjectFromSocketList = function(list, user) {
+  var i, index;
+  for (i = 0; i < list.length; i++) {
+    if (list[i].username == user) {
+      index = i;
+      break;
+    }
+  }
+  list.splice(index, 1);
+  return list;
 };
 
 var contains = function(array, value) {
@@ -72,6 +86,7 @@ var postAuthenticate = function(socket, data) {
   setupSocket(user);
   if (!contains(onlineList, user.username)) {
     onlineList.push(user.username);
+    socketList.push(user);
   }
   console.log(onlineList);
   user.socket.emit('onlineList', onlineList);
@@ -87,7 +102,8 @@ var setupSocket = function(user) {
   //should be ok to remove this - don't ever have to ask for online list.
 
   user.socket.on('disconnect', function() {
-    onlineList = removeFromList(onlineList, user.username);
+    onlineList = removeStringFromList(onlineList, user.username);
+    socketList = removeObjectFromSocketList(socketList, user.username);
     console.log(onlineList);
     console.log("disconnected");
     user.socket.broadcast.emit('onlineList', onlineList);
