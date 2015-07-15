@@ -11,13 +11,13 @@ var onlineList = [];
 var removeFromList = function(list, value) {
   var index = list.indexOf(value);
   if (index !== -1) {
-   list.splice(index, 1); 
+   list.splice(index, 1);
   }
   return list
 };
 
 var contains = function(array, value) {
-  return array.indexOf(value) > -1; 
+  return array.indexOf(value) > -1;
 }
 
 var createUser = function(user, callback, responseObject) {
@@ -35,13 +35,13 @@ var createUser = function(user, callback, responseObject) {
       callback(null, true, responseObject);
     }
   });
-  
+
 }
 
 var authenticate = function(userLogin, callback) {
   console.log("username: " + userLogin.username + "\n");
   console.log("password: " + userLogin.password + "\n");
-  
+
   firebaseRef.authWithPassword({
     email    : userLogin.username + "@valid.email",
     password : userLogin.password
@@ -60,7 +60,7 @@ var authenticate = function(userLogin, callback) {
     }
   }, { remember: "none"});
 }
-  
+
 var postAuthenticate = function(socket, data) {
   //maybe go to database and get user's ID instead and set that to socket instead
   //create a user
@@ -80,12 +80,12 @@ var postAuthenticate = function(socket, data) {
 
 var setupSocket = function(user) {
   connections.setupSocket(user);
-  
+
 //  user.socket.on('onlineList', function() {
 //    user.socket.emit('onlineList', onlineList);
-//  }); 
+//  });
   //should be ok to remove this - don't ever have to ask for online list.
-  
+
   user.socket.on('disconnect', function() {
     onlineList = removeFromList(onlineList, user.username);
     console.log(onlineList);
@@ -93,24 +93,33 @@ var setupSocket = function(user) {
     user.socket.broadcast.emit('onlineList', onlineList);
     //do some other cleanup? - actually setup cleanup in the connections file
   });
+
+  user.socket.on('sendConversation', function(conversation) {
+    //Conversation.firstUser is original sender so secondUser is recipient
+    connections.storeConversation(conversation);
+  });
+
+  user.socket.on('sendMessage', function(message) {
+    connections.storeMessage(message);
+  });
 };
 
 module.exports = function(server) {
   var io = require('socket.io').listen(server);
-  
+
   require('socketio-auth')(io, {
-    authenticate: authenticate, 
+    authenticate: authenticate,
     postAuthenticate: postAuthenticate,
     timeout: 2000 //set to 1000 if possible
   });
-  
+
   // set up other socket stuff
-  
-  
+
+
   return {
     io: io,
     createUser: createUser
   }
-  
+
 }
-  
+

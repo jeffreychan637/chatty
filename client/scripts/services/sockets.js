@@ -92,7 +92,13 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
       $rootScope.$apply();
     });
 
-    socket.on()
+    socket.on('receiveMessage', function(message) {
+
+    });
+
+    socket.on('receiveConversation', function(conversation) {
+
+    });
   };
 
   var getConversations = function(socket) {
@@ -107,11 +113,11 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
   };
 
   var sendConversation = function(socket, conversation) {
-    socket.emit('conversation', conversation);
+    socket.emit('sendConversation', conversation);
   };
 
   var sendMessage = function(socket, message, conversationId) {
-    socket.emit('message', {message: message,
+    socket.emit('sendMessage', {message: message,
                             conversationId: conversationId});
   };
 
