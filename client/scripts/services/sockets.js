@@ -102,12 +102,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
   };
 
   var getConversations = function(socket) {
-    socket.emit('getConversations', )
+    socket.emit('getConversations', {});
     //provide some id so server knows where in the list you are
   };
 
   var getMessages = function(socket) {
-    socket.emit('getMessages', {})
+    socket.emit('getMessages', {});
     //provide some id so server knows where in the list you are
     //provide conversation id too
   };

@@ -18,7 +18,7 @@ var removeStringFromList = function(list, value) {
 };
 
 //TEST THIS
-removeObjectFromSocketList = function(list, user) {
+var removeObjectFromSocketList = function(list, user) {
   var i, index;
   for (i = 0; i < list.length; i++) {
     if (list[i].username == user) {
