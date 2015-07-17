@@ -44,9 +44,19 @@ var getUserListSetup = function(user) {
   });
 }
 
+var storeConversation = function() {
+
+};
+
+var storeMessage = function() {
+
+};
+
 module.exports = {
   getConversations: getConversations,
   getMessages: getMessages,
   addUser: addUser,
-  getUserListSetup: getUserListSetup
+  getUserListSetup: getUserListSetup,
+  storeConversation: storeConversation,
+  storeMessage: storeMessage
 };

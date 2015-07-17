@@ -116,6 +116,8 @@ var setupSocket = function(user) {
   });
 
   user.socket.on('sendMessage', function(message) {
+    //send to user already based on online list
+    //probably should set up something for socket to emit a message back to the client
     connections.storeMessage(message);
   });
 };

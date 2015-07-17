@@ -11,33 +11,39 @@ var setupSocket = function(user) {
   database.getUserListSetup(user);
   getConversations(user);
   getMessages(user);
+  storeConversation(user);
+  storeMessage(user);
 }
 
 var getConversations = function(user) {
-  user.socket.on("getConversations", function(conversationId) {
+  user.socket.on('getConversations', function(conversationId) {
     var conversations = database.getConversations(user, conversationId, 10);
     user.socket.emit(conversations);
   });
 };
 
 var getMessages = function(user) {
-  user.socket.on("getMessages", function(request) {
+  user.socket.on('getMessages', function(request) {
     var messages = database.getMessages(user, request, 20);
     user.socket.emit(messages);
   });
 };
 
-var storeConversations = function() {
-
+var storeConversation = function(user) {
+    user.socket.on('sendConversation', function(conversation) {
+        database.storeConversation(conversation);
+    });
 };
 
-var storeMessages = function() {
-
+var storeMessage = function(user) {
+    user.socket.on('sendMessage', function(messageInfo) {
+        database.storeMessage(messageInfo);
+    });
 };
 
 module.exports = {
   addUser: addUser,
   setupSocket: setupSocket,
-  storeConversations: storeConversations,
-  storeMessages: storeMessages
+  storeConversations: storeConversation,
+  storeMessages: storeMessage
 }
