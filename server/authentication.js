@@ -111,6 +111,8 @@ var setupSocket = function(user) {
   });
 
   user.socket.on('sendConversation', function(conversation) {
+    console.log(conversation);
+    console.log('got conversation');
     var verifiedConvo = verifyConversation(user, conversation);
     if (verifiedConvo) {
       connections.storeConversation(verifiedConvo.conversation,
@@ -135,20 +137,25 @@ var verifyConversation = function(user, conversation) {
     if (typeof conversation.origRecipient == 'string') {
         convoObject.origRecipient = conversation.origRecipient;
     } else {
+        console.log(conversation.origRecipient);
+        console.log('failed1');
         return false;
     }
-    if (conversation.messages) {
-        var messageObject = verifyMessage(user, conversation.message);
+    if (Array.isArray(conversation.messages) && conversation.messages[0]) {
+        var messageObject = verifyMessage(user, conversation.messages[0]);
         if (!messageObject) {
+            console.log('failed2');
             return false;
         }
     } else {
+        console.log('not array');
         return false;
     }
     convoObject.origSender = user.username;
     convoObject.origSenderUnread = 0;
-    convoObject.origReceiverUnread = 1;
+    convoObject.origRecipientUnread = 1;
     convoObject.messages = {};
+    console.log(convoObject);
     return {conversation: convoObject, messages: messageObject};
 };
 
@@ -157,10 +164,12 @@ var verifyMessage = function(user, message) {
   if (typeof message.content == 'string') {
     messageObject.content = message.content;
   } else {
+    console.log('failed3');
     return false;
   }
   messageObject.time = Date.now();
   messageObject.sender = user.username;
+  console.log(messageObject);
   return messageObject;
 };
 

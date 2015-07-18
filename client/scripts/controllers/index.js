@@ -213,11 +213,14 @@ angular.module('chatty')
           console.log('sending new message!');
           var conversation = {
             // origSender: $scope.username, //verify on server
-            origReceiver: $scope.newRecipient,
-            message: {
+            origRecipient: $scope.newRecipient,
+            messages: [
+              {
+                time: Date.now(),
                 sender: $scope.username, //verify on server
                 content: $scope.newMessage.trim()
               }
+            ]
           }
           sockets.sendConversation(socket, conversation);
           $scope.currConversation = chats.getConversationInfo(conversation, $scope.username);

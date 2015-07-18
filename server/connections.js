@@ -38,6 +38,6 @@ var storeMessage = function(message, conversationId) {
 module.exports = {
   addUser: addUser,
   setupSocket: setupSocket,
-  storeConversations: storeConversation,
-  storeMessages: storeMessage
+  storeConversation: storeConversation,
+  storeMessage: storeMessage
 }

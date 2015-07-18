@@ -57,6 +57,7 @@ var storeConversation = function(conversation, messages) {
   usersRef.child(conversation.origSender).update(newConRefUser);
   usersRef.child(conversation.origRecipient).update(newConRefRecipient);
   conRef.child('messages').push(messages);
+  console.log('conversation stored');
 };
 
 var storeMessage = function(message, conversationId) {
