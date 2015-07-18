@@ -111,7 +111,7 @@ var setupSocket = function(user) {
   });
 
   user.socket.on('sendConversation', function(conversation) {
-    //Conversation.firstUser is original sender so secondUser is recipient
+    //Conversation.sender is original sender so secondUser is recipient
     connections.storeConversation(conversation);
   });
 

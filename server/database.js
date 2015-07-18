@@ -48,11 +48,13 @@ var getUserListSetup = function(user) {
   });
 }
 
-var storeConversation = function() {
-  // var firstUser =
+var storeConversation = function(conversation) {
+  var newConRef = conversationsRef.push({
+
+  });
 };
 
-var storeMessage = function() {
+var storeMessage = function(messageInfo) {
 
 };
 

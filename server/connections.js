@@ -32,6 +32,7 @@ var getMessages = function(user) {
 var storeConversation = function(user) {
     user.socket.on('sendConversation', function(conversation) {
         //should verify conversation
+
         database.storeConversation(user, conversation);
     });
 };
@@ -41,6 +42,20 @@ var storeMessage = function(user) {
         //should verify message details
         database.storeMessage(user, messageInfo);
     });
+};
+
+var verifyConversation = function(user, conversation) {
+    var convoObject = {}
+    convoObject.origSender = user.username;
+    if (conversation.origRecipient) {
+        convoObject.origRecipient = conversation.origRecipient;
+    } else {
+        return false;
+    }
+};
+
+var verifyMessage = function() {
+
 };
 
 module.exports = {
