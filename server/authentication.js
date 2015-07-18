@@ -124,9 +124,11 @@ var setupSocket = function(user) {
   user.socket.on('sendMessage', function(messageObject) {
     //send to user already based on online list
     //probably should set up something for socket to emit a message back to the client
-    var verifiedMessage = verifyMessage(messageObject.message);
+    console.log('got message');
+    console.log(messageObject);
+    var verifiedMessage = verifyMessage(user, messageObject.message);
     if (verifiedMessage && typeof messageObject.conversationId == 'string') {
-      connections.storeMessage(verifiedMessage, conversationId);
+      connections.storeMessage(verifiedMessage, messageObject.conversationId);
     }
     //failing silently
   });
@@ -160,6 +162,7 @@ var verifyConversation = function(user, conversation) {
 };
 
 var verifyMessage = function(user, message) {
+  console.log(message);
   var messageObject = {};
   if (typeof message.content == 'string') {
     messageObject.content = message.content;
