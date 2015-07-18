@@ -111,15 +111,56 @@ var setupSocket = function(user) {
   });
 
   user.socket.on('sendConversation', function(conversation) {
-    //Conversation.sender is original sender so secondUser is recipient
-    connections.storeConversation(conversation);
+    var verifiedConvo = verifyConversation(user, conversation);
+    if (verifiedConvo) {
+      connections.storeConversation(verifiedConvo.conversation,
+                                    verifiedConvo.messages);
+    }
+    //failing silentily
   });
 
-  user.socket.on('sendMessage', function(message) {
+  user.socket.on('sendMessage', function(messageObject) {
     //send to user already based on online list
     //probably should set up something for socket to emit a message back to the client
-    connections.storeMessage(message);
+    var verifiedMessage = verifyMessage(messageObject.message);
+    if (verifiedMessage && typeof messageObject.conversationId == 'string') {
+      connections.storeMessage(verifiedMessage, conversationId);
+    }
+    //failing silently
   });
+};
+
+var verifyConversation = function(user, conversation) {
+    var convoObject = {};
+    if (typeof conversation.origRecipient == 'string') {
+        convoObject.origRecipient = conversation.origRecipient;
+    } else {
+        return false;
+    }
+    if (conversation.messages) {
+        var messageObject = verifyMessage(user, conversation.message);
+        if (!messageObject) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+    convoObject.origSender = user.username;
+    convoObject.origSenderUnread = 0;
+    convoObject.origReceiverUnread = 1;
+    return {conversation: convoObject, messages: messageObject};
+};
+
+var verifyMessage = function(user, message) {
+  var messageObject = {};
+  if (typeof message.content == 'string') {
+    messageObject.content = message.content;
+  } else {
+    return false;
+  }
+  messageObject.time = Date.now();
+  messageObject.sender = user.username;
+  return messageObject;
 };
 
 module.exports = function(server) {

@@ -48,14 +48,14 @@ var getUserListSetup = function(user) {
   });
 }
 
-var storeConversation = function(conversation) {
+var storeConversation = function(user, conversation, messages) {
   var newConRef = conversationsRef.push({
 
   });
 };
 
 var storeMessage = function(messageInfo) {
-
+  //what if conversation not created yet?
 };
 
 module.exports = {

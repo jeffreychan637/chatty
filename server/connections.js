@@ -11,8 +11,6 @@ var setupSocket = function(user) {
   database.getUserListSetup(user);
   getConversations(user);
   getMessages(user);
-  storeConversation(user);
-  storeMessage(user);
 }
 
 var getConversations = function(user) {
@@ -29,33 +27,12 @@ var getMessages = function(user) {
   });
 };
 
-var storeConversation = function(user) {
-    user.socket.on('sendConversation', function(conversation) {
-        //should verify conversation
-
-        database.storeConversation(user, conversation);
-    });
+var storeConversation = function(conversation, messages) {
+    database.storeConversation(conversation, messages);
 };
 
-var storeMessage = function(user) {
-    user.socket.on('sendMessage', function(messageInfo) {
-        //should verify message details
-        database.storeMessage(user, messageInfo);
-    });
-};
-
-var verifyConversation = function(user, conversation) {
-    var convoObject = {}
-    convoObject.origSender = user.username;
-    if (conversation.origRecipient) {
-        convoObject.origRecipient = conversation.origRecipient;
-    } else {
-        return false;
-    }
-};
-
-var verifyMessage = function() {
-
+var storeMessage = function(message, conversationId) {
+    database.storeMessage(message, conversationId);
 };
 
 module.exports = {
