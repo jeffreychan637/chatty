@@ -48,14 +48,18 @@ var getUserListSetup = function(user) {
   });
 }
 
-var storeConversation = function(user, conversation, messages) {
-  var newConRef = conversationsRef.push({
-
-  });
+var storeConversation = function(conversation, messages) {
+  var conRef = conversationsRef.push(conversation);
+  var newConRef = {};
+  newConRef[conversation.origRecipient] = conRef.key();
+  usersRef.child(conversation.origSender).update(newConRef);
+  conRef.child('messages').push(messages);
 };
 
-var storeMessage = function(messageInfo) {
+var storeMessage = function(message, conversationId) {
   //what if conversation not created yet?
+  var conRef = conversationsRef.child(conversationId);
+  conRef.child('messages').push(message);
 };
 
 module.exports = {
