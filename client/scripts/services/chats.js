@@ -6,11 +6,11 @@ angular.module('chatty').factory('chats', function () {
   var getRecipientandUnread = function(chat, user) {
     if (chat.origReceiver == user) {
       return {recipient: chat.origSender,
-              unread: chat.origReceiverUnread
+              unread: chat.origReceiverUnread || 0
              };
     } else {
       return {recipient: chat.origSender,
-              unread: chat.origReceiverUnread
+              unread: chat.origReceiverUnread || 0
              };
     }
   };

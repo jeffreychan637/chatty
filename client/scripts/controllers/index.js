@@ -214,15 +214,10 @@ angular.module('chatty')
           var conversation = {
             // origSender: $scope.username, //verify on server
             origReceiver: $scope.newRecipient,
-            origSenderUnread: 0,
-            origReceiverUnread: 1,
-            messages: [
-              {
-                time: Date.now(),
+            message: {
                 sender: $scope.username, //verify on server
                 content: $scope.newMessage.trim()
               }
-            ]
           }
           sockets.sendConversation(socket, conversation);
           $scope.currConversation = chats.getConversationInfo(conversation, $scope.username);
@@ -256,7 +251,6 @@ angular.module('chatty')
       if (!event.shiftKey && event.keyCode == 13 && $scope.replyMessage) {
         event.preventDefault();
         var message = {
-          time: Date.now(),
           sender: $scope.username,
           content: $scope.replyMessage.trim()
         }
