@@ -50,9 +50,12 @@ var getUserListSetup = function(user) {
 
 var storeConversation = function(conversation, messages) {
   var conRef = conversationsRef.push(conversation);
-  var newConRef = {};
-  newConRef[conversation.origRecipient] = conRef.key();
-  usersRef.child(conversation.origSender).update(newConRef);
+  var newConRefUser = {};
+  var newConRefRecipient = {};
+  newConRefUser[conversation.origRecipient] = conRef.key();
+  newConRefRecipient[conversation.origSender] = conRef.key();
+  usersRef.child(conversation.origSender).update(newConRefUser);
+  usersRef.child(conversation.origRecipient).update(newConRefRecipient);
   conRef.child('messages').push(messages);
 };
 
