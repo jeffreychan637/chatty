@@ -31,13 +31,15 @@ var getMessages = function(user) {
 
 var storeConversation = function(user) {
     user.socket.on('sendConversation', function(conversation) {
-        database.storeConversation(conversation);
+        //should verify conversation
+        database.storeConversation(user, conversation);
     });
 };
 
 var storeMessage = function(user) {
     user.socket.on('sendMessage', function(messageInfo) {
-        database.storeMessage(messageInfo);
+        //should verify message details
+        database.storeMessage(user, messageInfo);
     });
 };
 

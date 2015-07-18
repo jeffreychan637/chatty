@@ -5,6 +5,7 @@ var secrets = require("./secrets");
 
 var firebaseRef = new Firebase(secrets.firebaseUrl);
 var userListRef = new Firebase(secrets.firebaseUrl + '/userList');
+var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 
 var getConversations = function(id, amount) {
@@ -21,6 +22,9 @@ var addUser = function(username) {
   userListRef.push({
     username: username
   });
+  var userObject = {};
+  userObject[username] = {username : username};
+  usersRef.update(userObject);
 }
 
 var getUserListSetup = function(user) {
