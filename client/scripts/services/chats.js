@@ -4,13 +4,13 @@
 angular.module('chatty').factory('chats', function () {
 
   var getRecipientandUnread = function(chat, user) {
-    if (chat.firstUser == user) {
-      return {recipient: chat.secondUser,
-              unread: chat.firstUserPostsUnread
+    if (chat.origReceiver == user) {
+      return {recipient: chat.origSender,
+              unread: chat.origReceiverUnread
              };
     } else {
-      return {recipient: chat.firstUser,
-              unread: chat.secondUserPostsUnread
+      return {recipient: chat.origSender,
+              unread: chat.origReceiverUnread
              };
     }
   };

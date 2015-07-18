@@ -32,8 +32,7 @@ angular.module('chatty')
     });
 
     var socket,
-        data,
-        latestConversationId;
+        data;
     $scope.userList = [];
     $scope.loading = false;
     $scope.loginError = false;
@@ -62,7 +61,7 @@ angular.module('chatty')
     ];
 
     $scope.currConversation = {
-      id: null, //need this to tell what message conversation belongs to when sent
+      id: 1, //need this to tell what message conversation belongs to when sent
       time: null,
       recipient: 'q',
       latestMessage: null,
@@ -188,7 +187,6 @@ angular.module('chatty')
                     $scope.loading = false;
                   }, 1000);
           //do something with loaded data
-          latestConversationId = 5; //REMOVE THIS
         },
         function() {
           console.log('get basic info failed');
@@ -214,15 +212,14 @@ angular.module('chatty')
         if (contains($scope.userList, $scope.newRecipient)) {
           console.log('sending new message!');
           var conversation = {
-            id: latestConversationId + 1,
-            firstUser: $scope.username,
-            secondUser: $scope.newRecipient,
-            firstUserPostsUnread: 0,
-            secondUserPostsUnread: 1,
+            // origSender: $scope.username, //verify on server
+            origReceiver: $scope.newRecipient,
+            origSenderUnread: 0,
+            origReceiverUnread: 1,
             messages: [
               {
                 time: Date.now(),
-                sender: $scope.username,
+                sender: $scope.username, //verify on server
                 content: $scope.newMessage.trim()
               }
             ]
