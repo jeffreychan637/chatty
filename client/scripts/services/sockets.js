@@ -118,7 +118,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
 
   var sendMessage = function(socket, message, conversationId) {
     socket.emit('sendMessage', {message: message,
-                            conversationId: '-JuVW36kBvPoERH7iyzN'});//conversationId});
+                            conversationId: ''});//conversationId});
   };
 
 //  var getOnlineList = function(socket) {
