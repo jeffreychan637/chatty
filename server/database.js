@@ -7,15 +7,17 @@ var firebaseRef = new Firebase(secrets.firebaseUrl);
 var userListRef = new Firebase(secrets.firebaseUrl + '/userList');
 var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
+var messagesRef = new Firebase(secrets.firebaseUrl + '/messages');
 
-var getConversations = function(id) {
+var CONVERSATIONS_TO_SEND_EACH_TIME = 10;
+var MESSAGES_TO_SEND_EACH_TIME = 20;
 
-  return []
+var getConversations = function(username, latestTime, callback) {
+
 };
 
-var getMessages = function(request, amount) {
+var getMessages = function(request, callback) {
 
-  return [];
 };
 
 var addUser = function(username) {
@@ -43,25 +45,30 @@ var getUserListSetup = function(callback) {
 }
 
 var storeConversation = function(conversation, messages) {
+  var sender = conversation.origSender;
+  var recipient = conversation.origRecipient;
+
   var conRef = conversationsRef.push(conversation);
-  var newConRefUser = {};
-  var newConRefRecipient = {};
   var conRefInUser = {'conKey' : conRef.key(), 'time' : messages.time};
-  newConRefUser[conversation.origRecipient] = conRefInUser;
-  newConRefRecipient[conversation.origSender] = conRefInUser;
-  usersRef.child(conversation.origSender).update(newConRefUser);
-  usersRef.child(conversation.origRecipient).update(newConRefRecipient);
-  conRef.child('messages').push(messages);
+
+  usersRef.child(sender).child(recipient).update(conRefInUser);
+  usersRef.child(recipient).child(sender).update(conRefInUser);
+
+  messagesRef.child(conRef.key()).push(messages);
   console.log('conversation stored');
 };
 
 var storeMessage = function(message, conversationId) {
   //what if conversation not created yet?
   console.log(conversationId);
+
   var conRef = conversationsRef.child(conversationId);
+
   var time = {'time': message.time};
   conRef.update(time);
-  conRef.child('messages').push(message);
+
+  messagesRef.child(conversationId).push(message);
+
   conRef.child('origSender').once('value', function (sender) {
     conRef.child('origRecipient').once('value', function(recipient) {
       sender = sender.val();

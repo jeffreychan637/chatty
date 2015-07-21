@@ -13,25 +13,26 @@ var setupSocket = function(user) {
   }
   database.getUserListSetup(callbackUserList);
 
-  user.socket.on('getConversations', function(conversationId) {
-    getConversations(user, conversationId);
+  user.socket.on('getConversations', function(lastestTime) {
+    getConversations(user, lastestTime);
   })
   user.socket.on('getMessages', function(request) {
     getMessages(user, request);
   })
 };
 
-var getConversations = function(user, conversationId) {
+var getConversations = function(user, lastestTime) {
   var callback = function(conversations) {
     user.socket.emit(conversations);
   }
-  database.getConversations(user.username, conversationId, callback);
-  //might have to wait until callback
+  database.getConversations(user.username, lastestTime, callback);
 };
 
 var getMessages = function(user, request) {
-  var messages = database.getMessages(user, request, 20);
-  user.socket.emit(messages); //might have to wait until callback
+  var callback = function(messages) {
+    user.socket.emit(messages);
+  }
+  database.getMessages(request, callback);
 };
 
 var storeConversation = function(conversation, messages) {
