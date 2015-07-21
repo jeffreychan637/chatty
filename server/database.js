@@ -3,7 +3,6 @@
 var Firebase = require("firebase");
 var secrets = require("./secrets");
 
-var firebaseRef = new Firebase(secrets.firebaseUrl);
 var userListRef = new Firebase(secrets.firebaseUrl + '/userList');
 var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
