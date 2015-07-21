@@ -8,7 +8,7 @@ var userListRef = new Firebase(secrets.firebaseUrl + '/userList');
 var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 
-var getConversations = function(id, amount) {
+var getConversations = function(id) {
 
   return []
 };
@@ -24,10 +24,9 @@ var addUser = function(username) {
   });
 }
 
-var getUserListSetup = function(user) {
-  //use username to remove that person from list
+
+var getUserListSetup = function(callback) {
   // Attach an asynchronous callback to read the data at our posts reference
-  console.log("setting up socket for: " + user.username);
   userListRef.on("value", function(snapshot) {
     console.log(snapshot.val());
     var userObject = snapshot.val();
@@ -37,9 +36,7 @@ var getUserListSetup = function(user) {
       userList.push(userObject[key].username);
     }
     console.log(userList);
-    console.log("emitting userlist for: " + user.username);
-    user.socket.emit('userList', {userList: userList, emit: 5, user: user.username});
-    user.socket.broadcast.emit('userList', {userList: userList, broadcast: 5, user: user.username});
+    callback(userList);
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
   });
