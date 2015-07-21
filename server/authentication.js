@@ -132,6 +132,8 @@ var setupSocket = function(user) {
     }
     //failing silently
   });
+
+  connections.sendInitialData(user);
 };
 
 var verifyConversation = function(user, conversation) {

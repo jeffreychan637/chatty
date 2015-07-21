@@ -17,13 +17,13 @@ var setupSocket = function(user) {
     if (typeof lastestTime == 'number') {
       getConversations(user, lastestTime);
     }
-  })
+  });
   user.socket.on('getMessages', function(request) {
     var verifiedRequest = verifyRequest(request);
     if (verifiedRequest) {
       getMessages(user, verifiedRequest);
     }
-  })
+  });
 };
 
 var verifyRequest = function(request) {
@@ -42,10 +42,16 @@ var verifyRequest = function(request) {
 };
 
 var getConversations = function(user, lastestTime) {
-  var callback = function(conversations) {
+  var conversationCallback = function(conversations) {
     user.socket.emit(conversations);
   }
-  database.getConversations(user.username, lastestTime, callback);
+  var messageCallback = function(messages) {
+    user.socket.emit(messages);
+  }
+  var callbacks = {conversation: conversationCallback,
+                   message: messageCallback
+                  };
+  database.getConversations(user.username, lastestTime, callbacks);
 };
 
 var getMessages = function(user, request) {
@@ -63,9 +69,14 @@ var storeMessage = function(message, conversationId) {
   database.storeMessage(message, conversationId);
 };
 
+var sendInitialData = function(user) {
+  getConversations(user, Date.now());
+};
+
 module.exports = {
   addUser: addUser,
   setupSocket: setupSocket,
   storeConversation: storeConversation,
-  storeMessage: storeMessage
+  storeMessage: storeMessage,
+  sendInitialData: sendInitialData
 }

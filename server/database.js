@@ -8,15 +8,47 @@ var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 var messagesRef = new Firebase(secrets.firebaseUrl + '/messages');
 
-var CONVERSATIONS_TO_SEND_EACH_TIME = 10;
-var MESSAGES_TO_SEND_EACH_TIME = 20;
+var CONVERSATIONS_SENT_PER_TIME = 10;
+var MESSAGES_SENT_PER_TIME = 20;
 
-var getConversations = function(username, latestTime, callback) {
-
+var getConversations = function(username, latestTime, callbacks) {
+  var user = usersRef.child(username);
+  user.orderByChild('time').endAt(latestTime).limitToLast(
+    CONVERSATIONS_SENT_PER_TIME).on('child_added',
+    function(snapshot) {
+      console.log('got con key from db');
+      console.log(snapshot.val());
+      if (snapshot.val() != null) {
+        conversationsRef.child(snapshot.val().conKey).once('value',
+          function(conSnapshot) {
+            console.log('got conversation from db');
+            console.log(conSnapshot.val());
+            callbacks.conversation(conSnapshot.val());
+        });
+        var messageRequest = {conversationId: snapshot.val().conKey,
+                              latestTime: latestTime
+                             };
+        getMessages(messageRequest, callbacks.message);
+      }
+    }
+  );
 };
 
 var getMessages = function(request, callback) {
-
+  var messages = messagesRef.child(request.conversationId);
+  messages.orderByChild('time').endAt(request.latestTime).limitToLast(
+    MESSAGES_SENT_PER_TIME).on('child_added',
+    function(snapshot) {
+      console.log('got message from db');
+      console.log(snapshot.val());
+      if (snapshot.val() != null) {
+        var message = {conversationId: request.conversationId,
+                       message: snapshot.val()
+                      };
+        callback(message);
+      }
+    }
+  );
 };
 
 var addUser = function(username) {
