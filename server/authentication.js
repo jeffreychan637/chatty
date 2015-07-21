@@ -157,7 +157,6 @@ var verifyConversation = function(user, conversation) {
     convoObject.origSenderUnread = 0;
     convoObject.origRecipientUnread = 1;
     convoObject.time = messageObject.time;
-    convoObject.messages = {};
     console.log(convoObject);
     return {conversation: convoObject, messages: messageObject};
 };

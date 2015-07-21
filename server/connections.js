@@ -14,11 +14,31 @@ var setupSocket = function(user) {
   database.getUserListSetup(callbackUserList);
 
   user.socket.on('getConversations', function(lastestTime) {
-    getConversations(user, lastestTime);
+    if (typeof lastestTime == 'number') {
+      getConversations(user, lastestTime);
+    }
   })
   user.socket.on('getMessages', function(request) {
-    getMessages(user, request);
+    var verifiedRequest = verifyRequest(request);
+    if (verifiedRequest) {
+      getMessages(user, verifiedRequest);
+    }
   })
+};
+
+var verifyRequest = function(request) {
+  var verifiedRequest = {};
+  if (typeof request.conversationId == 'string') {
+    verifiedRequest.conversationId = request.conversationId;
+  } else {
+    return false;
+  }
+  if (typeof request.lastestTime == 'number') {
+    verifiedRequest.lastestTime = request.lastestTime;
+  } else {
+    return false;
+  }
+  return verifiedRequest;
 };
 
 var getConversations = function(user, lastestTime) {
