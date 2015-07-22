@@ -17,16 +17,18 @@ var removeStringFromList = function(list, value) {
   return list
 };
 
-//TEST THIS
 var removeObjectFromSocketList = function(list, user) {
   var i, index;
+  console.log(index);
   for (i = 0; i < list.length; i++) {
     if (list[i].username == user) {
       index = i;
       break;
     }
   }
-  list.splice(index, 1);
+  if (index != null) {
+    list.splice(index, 1);
+  }
   return list;
 };
 
@@ -86,9 +88,11 @@ var postAuthenticate = function(socket, data) {
   setupSocket(user);
   if (!contains(onlineList, user.username)) {
     onlineList.push(user.username);
-    socketList.push(user);
   }
+  socketList = removeObjectFromSocketList(socketList, user.username);
+  socketList.push(user);
   console.log(onlineList);
+  console.log(socketList);
   user.socket.emit('onlineList', onlineList);
   user.socket.broadcast.emit('onlineList', onlineList);
 };
@@ -105,6 +109,7 @@ var setupSocket = function(user) {
     onlineList = removeStringFromList(onlineList, user.username);
     socketList = removeObjectFromSocketList(socketList, user.username);
     console.log(onlineList);
+    console.log(socketList);
     console.log("disconnected");
     user.socket.broadcast.emit('onlineList', onlineList);
     //do some other cleanup? - actually setup cleanup in the connections file
