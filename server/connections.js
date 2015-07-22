@@ -42,11 +42,11 @@ var verifyRequest = function(request) {
 };
 
 var getConversations = function(user, lastestTime) {
-  var conversationCallback = function(conversations) {
-    user.socket.emit(conversations);
+  var conversationCallback = function(conversation) {
+    user.socket.emit('newConversation', conversation);
   }
-  var messageCallback = function(messages) {
-    user.socket.emit(messages);
+  var messageCallback = function(message) {
+    user.socket.emit('newMessage', message);
   }
   var callbacks = {conversation: conversationCallback,
                    message: messageCallback
@@ -55,8 +55,8 @@ var getConversations = function(user, lastestTime) {
 };
 
 var getMessages = function(user, request) {
-  var callback = function(messages) {
-    user.socket.emit(messages);
+  var callback = function(message) {
+    user.socket.emit('newMessage', message);
   }
   database.getMessages(request, callback);
 };
