@@ -1,9 +1,9 @@
 'use strict';
 /*global $:false, FB:false, jQuery:false */
 
-angular.module('chatty').factory('sockets', function ($q, $rootScope) {
+angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
-  var data = {};
+  var data = {'conversationsList' : []};
 
   var getData = function() {
     return data;
@@ -27,7 +27,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     socket.user = user.username; //maybe remove this - should probably remove this
     console.log("authenticating");
 
-    defineSocket(socket, deferred);
+    defineSocket(socket, deferred, user.username);
 
     socket.emit('authentication', user);
 
@@ -58,7 +58,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
     return deferred.promise;
   };
 
-  var defineSocket = function(socket, deferred) {
+  var defineSocket = function(socket, deferred, username) {
     socket.on('authenticated', function(authenticated) {
       notAuthenticated = false;
       if (authenticated) {
@@ -98,11 +98,26 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
 
     socket.on('newConversation', function(conversation) {
       console.log(conversation);
+      //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
+      //need to process chat before adding to list.
+      //chats.
+      data.conversationsList.unshift(conversation);
+      console.debug(data.conversationsList);
+      dataChanged += 1;
+      $rootScope.$apply();
     });
   };
 
   var getConversations = function(socket) {
-    socket.emit('getConversations', {});
+    //ASSUMES DATA.CONVERSATION IS SORTED
+    var length = data.conversationsList.length;
+    var latestTime;
+    if (length) {
+      latestTime = data.conversationsList[length - 1].time;
+    } else {
+      latestTime = Date.now();
+    }
+    socket.emit('getConversations', {latestTime: latestTime});
     //provide some id so server knows where in the list you are
   };
 

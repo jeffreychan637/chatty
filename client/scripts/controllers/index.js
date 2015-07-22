@@ -90,6 +90,9 @@ angular.module('chatty')
                     console.log('saw change in data');
                     console.log(sockets.checkData());
                     console.log('sorted: ' + $scope.userList);
+                    $scope.conversationsList = data.conversationsList;
+                    console.log('conversationsList');
+                    console.debug($scope.conversationsList);
     }, true);
 
     var sortByOnline = function(a, b) {
