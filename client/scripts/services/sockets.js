@@ -92,12 +92,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope) {
       $rootScope.$apply();
     });
 
-    socket.on('receiveMessage', function(message) {
-
+    socket.on('newMessage', function(message) {
+      console.log(message);
     });
 
-    socket.on('receiveConversation', function(conversation) {
-
+    socket.on('newConversation', function(conversation) {
+      console.log(conversation);
     });
   };
 
