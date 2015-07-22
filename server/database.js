@@ -23,7 +23,9 @@ var getConversations = function(username, latestTime, callbacks) {
           function(conSnapshot) {
             console.log('got conversation from db');
             console.log(conSnapshot.val());
-            callbacks.conversation(conSnapshot.val());
+            var conversation = conSnapshot.val();
+            conversation.id = snapshot.val().conKey;
+            callbacks.conversation(conversation);
         });
         var messageRequest = {conversationId: snapshot.val().conKey,
                               latestTime: latestTime
@@ -94,10 +96,8 @@ var storeMessage = function(message, conversationId) {
   console.log(conversationId);
 
   var conRef = conversationsRef.child(conversationId);
-
   var time = {'time': message.time};
   conRef.update(time);
-
 
   messagesRef.child(conversationId).push(message);
 
