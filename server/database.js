@@ -98,6 +98,7 @@ var storeMessage = function(message, conversationId) {
   var time = {'time': message.time};
   conRef.update(time);
 
+
   messagesRef.child(conversationId).push(message);
 
   conRef.child('origSender').once('value', function (sender) {
@@ -106,6 +107,15 @@ var storeMessage = function(message, conversationId) {
       recipient = recipient.val();
       usersRef.child(sender).child(recipient).update(time);
       usersRef.child(recipient).child(sender).update(time);
+      var recipientUnread;
+      if (sender == message.sender) {
+        recipientUnread = 'origRecipientUnread';
+      } else {
+        recipientUnread = 'origSenderUnread';
+      }
+      conRef.child(recipientUnread).transaction(function(currValue) {
+        return (currValue || 0) + 1;
+      }, function() {}, false);
     });
   });
 };
