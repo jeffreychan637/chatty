@@ -24,6 +24,13 @@ var setupSocket = function(user) {
       getMessages(user, verifiedRequest);
     }
   });
+
+  user.socket.on('readMessage', function(conversationId) {
+    console.log('got readMessage from socket');
+    if (typeof conversationId == 'string') {
+      database.readMessage(user.username, conversationId);
+    }
+  });
 };
 
 var verifyRequest = function(request) {

@@ -107,17 +107,43 @@ var storeMessage = function(message, conversationId) {
       recipient = recipient.val();
       usersRef.child(sender).child(recipient).update(time);
       usersRef.child(recipient).child(sender).update(time);
-      var recipientUnread;
-      if (sender == message.sender) {
-        recipientUnread = 'origRecipientUnread';
-      } else {
-        recipientUnread = 'origSenderUnread';
-      }
+      var recipientUnread = getUnread(sender, message.sender, 0);
       conRef.child(recipientUnread).transaction(function(currValue) {
         return (currValue || 0) + 1;
       }, function() {}, false);
     });
   });
+};
+
+var readMessage = function(username, conversationId) {
+  console.log('got read message');
+  var conRef = conversationsRef.child(conversationId);
+  conRef.child('origSender').once('value', function(sender) {
+    var senderUnread = getUnread(sender.val(), username, 1);
+    console.log(senderUnread);
+    conRef.child(senderUnread).transaction(function(currValue) {
+      console.log('setting to zero');
+      return 0;
+    }, function() {}, false);
+  });
+};
+
+var getUnread = function(senderDB, senderClient, chooseSender) {
+  console.log(senderDB);
+  //console.log();
+  if (senderDB == senderClient) {
+    if (chooseSender) {
+      return 'origSenderUnread';
+    } else {
+      return 'origRecipientUnread';
+    }
+  } else {
+    if (chooseSender) {
+      return 'origRecipientUnread';
+    } else {
+      return 'origSenderUnread';
+    }
+  }
 };
 
 module.exports = {
@@ -126,5 +152,6 @@ module.exports = {
   addUser: addUser,
   getUserListSetup: getUserListSetup,
   storeConversation: storeConversation,
-  storeMessage: storeMessage
+  storeMessage: storeMessage,
+  readMessage: readMessage
 };
