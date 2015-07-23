@@ -106,6 +106,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED
+    console.log('getting conversations');
     var length = data.conversationsList.length;
     var latestTime;
     if (length) {
@@ -114,10 +115,10 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       latestTime = Date.now();
     }
     socket.emit('getConversations', {latestTime: latestTime});
-    //provide some id so server knows where in the list you are
   };
 
   var getMessages = function(socket, conversation) {
+    console.log('getting messages');
     var latestTime;
     if (conversation.messages) {
       latestTime = conversation.messages[0].unixTime;

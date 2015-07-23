@@ -7,27 +7,44 @@ angular.module('chatty')
 
         var windowHeight = $(window).height();
         var leftover = windowHeight - $('.nav').height();
-        $('.chats').css('height', leftover.toString() + 'px');
+        var chats = $('.chats');
+        chats.css('height', leftover.toString() + 'px');
         $('.user-list').css('height', leftover.toString() + 'px');
 
-        var replyMargin = 2 * parseInt($('.reply').css('margin-left'), 10);
-        var replyPadding = 2 * parseInt($('.reply').css('padding-left'), 10);
-        var replyBorder = 2 * parseInt($('.reply').css('border-width'), 10);
+        var reply = $('.reply');
+        var replyBox = $('.reply-box');
+        var replyMargin = 2 * parseInt(reply.css('margin-left'), 10);
+        var replyPadding = 2 * parseInt(reply.css('padding-left'), 10);
+        var replyBorder = 2 * parseInt(reply.css('border-width'), 10);
         var replyWidth = $('.reply-box').width() - replyMargin - replyPadding - replyBorder;
-        $('.reply').css('width', replyWidth.toString() + 'px');
+        reply.css('width', replyWidth.toString() + 'px');
+
+        var conversationBox = $('.conversation-box');
 
         var remainingHeight = leftover - $('.reply-box').height();
         console.log(remainingHeight);
-        $('.conversation-box').css('height', remainingHeight.toString() + 'px');
+        conversationBox.css('height', remainingHeight.toString() + 'px');
 
         autosize($('#new-message'));
-        autosize($('#reply'));
+        autosize(reply);
 
-        $('#reply').on('autosize:resized', function() {
+        reply.on('autosize:resized', function() {
             console.log('textarea height updated');
             var remainingHeight = leftover - $('.reply-box').height();
             console.log(remainingHeight);
-            $('.conversation-box').css('height', remainingHeight.toString() + 'px');
+            conversationBox.css('height', remainingHeight.toString() + 'px');
+        });
+
+        conversationBox.scroll(function() {
+          if (!conversationBox.scrollTop()) {
+            sockets.getMessages(socket, $scope.currConversation);
+          }
+        });
+
+        chats.scroll(function() {
+          if (chats.scrollTop() + chats.outerHeight() >= chats.prop('scrollHeight') - 1) {
+            sockets.getConversations(socket);
+          }
         });
     });
 
