@@ -14,13 +14,19 @@ var setupSocket = function(user) {
   database.getUserListSetup(callbackUserList);
 
   user.socket.on('getConversations', function(lastestTime) {
+    console.log('GETTING CONVERSATIONS');
+    console.log(lastestTime);
     if (typeof lastestTime == 'number') {
+      console.log('yep - convos');
       getConversations(user, lastestTime);
     }
   });
   user.socket.on('getMessages', function(request) {
+    console.log('GETTING MESSAGES');
+    console.log(request);
     var verifiedRequest = verifyRequest(request);
     if (verifiedRequest) {
+      console.log('request verified');
       getMessages(user, verifiedRequest);
     }
   });

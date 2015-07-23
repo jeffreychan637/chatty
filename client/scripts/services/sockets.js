@@ -110,11 +110,11 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     var length = data.conversationsList.length;
     var latestTime;
     if (length) {
-      latestTime = data.conversationsList[length - 1].time;
+      latestTime = data.conversationsList[length - 1].unixTime - 1;
     } else {
       latestTime = Date.now();
     }
-    socket.emit('getConversations', {latestTime: latestTime});
+    socket.emit('getConversations', latestTime);
   };
 
   var getMessages = function(socket, conversation) {
