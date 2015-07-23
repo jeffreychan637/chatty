@@ -72,6 +72,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
     socket.on('newMessage', function(response) {
       console.log(response);
+      //TAKE ADVATANGE OF FACT THAT OBJECT REFERENCES ARE POINTERS
+      //ASSUMING MESSAGES ARRIVE IN ORDER
       var conversation = getParentConversation(response.conversationId);
       if (conversation) {
         conversation.messages.push(response.message);
@@ -127,7 +129,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
   var sendMessage = function(socket, message, conversationId) {
     socket.emit('sendMessage', {message: message,
-                            conversationId: ''});//conversationId});
+                                conversationId: conversationId});
+  };
+
+  var readMessage = function(socket, conversationId) {
+    console.log('sending readMessage');
+    socket.emit('readMessage', conversationId);
   };
 
 //  var getOnlineList = function(socket) {
@@ -150,6 +157,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     getMessages: getMessages,
     sendConversation: sendConversation,
     sendMessage: sendMessage,
+    readMessage: readMessage,
     disconnect: disconnect
   };
 });
