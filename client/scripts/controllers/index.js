@@ -37,38 +37,6 @@ angular.module('chatty')
     $scope.loading = false;
     $scope.loginError = false;
 
-    var messagesExample = [
-      {
-        sender: 'w',
-        content: 'yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
-      },
-      {
-        sender: 'w',
-        content: 'yolo'
-      },
-      {
-        sender: 'u',
-        content: 'yolo'
-      },
-      {
-        sender: 'w',
-        content: 'yolo'
-      },
-      {
-        sender: 'u',
-        content: 'yolo yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a yolo <br> sdksmdlaksmdklasmdkasmdlmksadmkamsdlkasmdsam kas sdadka asd a'
-      }
-    ];
-
-    $scope.currConversation = {
-      id: 1, //need this to tell what message conversation belongs to when sent
-      time: null,
-      recipient: 'q',
-      latestMessage: null,
-      unread: null,
-      messages: messagesExample
-    }
-
     $scope.conversationsList = [];
 
     $scope.$watch(function() {
