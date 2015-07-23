@@ -44,7 +44,7 @@ angular.module('chatty').factory('chats', function () {
     newChat.time = getTime(chat.time);
     //newChat.latestMessage = getLatest(chat.messages);
     newChat.id = chat.id;
-    // newChat.messages = chat.messages;
+    newChat.messages = [];
     return newChat;
   };
 

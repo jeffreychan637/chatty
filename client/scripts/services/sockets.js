@@ -40,31 +40,15 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
                     socket.emit('authentication', user);
                     console.log("trying login again");
                  }
-               }, 5000);
+               }, 6000);
 
     return deferred.promise;
   }
 
-  //used to load basic info  - lastest conversations and online list
-  var getBasicInfo = function(socket) {
-    var deferred = $q.defer();
-
-    //request online list
-    //request latest conversations
-
-
-    setTimeout(function() { deferred.resolve(data) }, 1000);
-
-    return deferred.promise;
-  };
-
   var defineSocket = function(socket, deferred, username) {
-    socket.on('authenticated', function(authenticated) {
+    socket.on('authenticated', function() {
       notAuthenticated = false;
-      if (authenticated) {
-        console.log('authenticated');
-        deferred.resolve(socket);
-      }
+      deferred.resolve(socket);
     });
 
     socket.on('unauthorized', function(err){
@@ -86,8 +70,15 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       $rootScope.$apply();
     });
 
-    socket.on('newMessage', function(message) {
-      console.log(message);
+    socket.on('newMessage', function(response) {
+      console.log(response);
+      var conversation = getParentConversation(response.conversationId);
+      if (conversation) {
+        conversation.messages.push(response.message);
+        conversation.latestMessage = response.message.content;
+      } else {
+        console.warn('Got message with no conversation parent');
+      }
     });
 
     socket.on('newConversation', function(conversation) {
@@ -99,6 +90,16 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       dataChanged += 1;
       $rootScope.$apply();
     });
+  };
+
+  var getParentConversation = function(conversationId) {
+    var i;
+    for (i = 0; i < data.conversationsList.length; i++) {
+      if (data.conversationsList[i].id == conversationId) {
+        return data.conversationsList[i];
+      }
+    }
+    return false;
   };
 
   var getConversations = function(socket) {
@@ -142,7 +143,6 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
   return {
     reload: reload,
     authenticate: authenticate,
-    getBasicInfo: getBasicInfo,
     defineSocket: defineSocket,
     getData: getData,
     checkData: checkData,

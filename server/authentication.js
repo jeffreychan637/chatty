@@ -84,6 +84,7 @@ var postAuthenticate = function(socket, data) {
     socket: socket,
     username: data.username
   };
+  user.socket.emit('authenticated');
   console.log('user has been authorized');
   setupSocket(user);
   if (!contains(onlineList, user.username)) {
