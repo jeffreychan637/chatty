@@ -210,12 +210,11 @@ angular.module('chatty')
         if (contains($scope.userList, $scope.newRecipient)) {
           console.log('sending new message!');
           var conversation = {
-            // origSender: $scope.username, //verify on server
             origRecipient: $scope.newRecipient,
             messages: [
               {
                 time: Date.now(),
-                sender: $scope.username, //verify on server
+                sender: $scope.username,
                 content: $scope.newMessage.trim()
               }
             ]
@@ -257,17 +256,24 @@ angular.module('chatty')
         }
         $scope.replyMessage = '';
         $scope.currConversation.messages.push(message);
-        $timeout(function() {
-            $('.conversation-box').animate({ scrollTop: $('.conversation-box').prop('scrollHeight') }, 'slow');
-            console.log('now running');
-            }, 1000);
+        scrollToBottom($('.conversation-box'));
         sockets.sendMessage(socket, message, $scope.currConversation.id);
       }
     };
 
     $scope.updateConversation = function(index) {
       $scope.currConversation = $scope.conversationsList[index];
+      $scope.currConversation.unread = 0;
+      scrollToBottom($('.conversation-box'));
+      sockets.readMessage(socket, $scope.currConversation.id);
     };
+
+    var scrollToBottom = function(object) {
+      $timeout(function() {
+            object.animate({ scrollTop: object.prop('scrollHeight') }, 'slow');
+            console.log('now running');
+            }, 500);
+    }
 
     $scope.logout = function() {
       location.reload(true);
