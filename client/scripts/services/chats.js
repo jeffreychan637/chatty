@@ -3,7 +3,7 @@
 
 angular.module('chatty').factory('chats', function () {
 
-  var getRecipientandUnread = function(chat, user) {
+  var getRecipientandUnread = function(chat, username) {
     console.log('chat');
     console.log(chat);
     if (chat.origRecipient == user) {
@@ -39,9 +39,9 @@ angular.module('chatty').factory('chats', function () {
     }
   };
 
-  var getConversationInfo = function(chat, user) {
+  var getConversationInfo = function(chat, username) {
     console.log(chat);
-    var newChat = getRecipientandUnread(chat, user);
+    var newChat = getRecipientandUnread(chat, username);
     var latest = getLatest(chat.messages);
     newChat.time = latest.time;
     newChat.latestMessage = latest.message;

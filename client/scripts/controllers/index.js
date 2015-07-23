@@ -128,6 +128,7 @@ angular.module('chatty')
           function(returnedSocket) {
             socket = returnedSocket;
             console.log('yes');
+            $scope.password = '';
             getBasicInfo();
           },
           function(error) {
