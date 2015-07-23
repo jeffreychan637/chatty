@@ -6,7 +6,7 @@ angular.module('chatty').factory('chats', function () {
   var getRecipientandUnread = function(chat, username) {
     console.log('chat');
     console.log(chat);
-    if (chat.origRecipient == user) {
+    if (chat.origRecipient == username) {
       return {recipient: chat.origSender,
               unread: chat.origRecipientUnread || 0
              };
@@ -19,11 +19,10 @@ angular.module('chatty').factory('chats', function () {
 
   var getLatest = function(messages) {
     console.log(messages);
-    var latestMessage = messages[messages.length - 1];
-    console.log(latestMessage);
-    return {message: latestMessage.content,
-            time: getTime(latestMessage.time)
-           }
+    if (messages) {
+      console.log(messages[messages.length - 1]);
+      return messages[messages.length - 1];
+    }
   };
 
   var getTime = function(unixTime) {
@@ -42,11 +41,10 @@ angular.module('chatty').factory('chats', function () {
   var getConversationInfo = function(chat, username) {
     console.log(chat);
     var newChat = getRecipientandUnread(chat, username);
-    var latest = getLatest(chat.messages);
-    newChat.time = latest.time;
-    newChat.latestMessage = latest.message;
+    newChat.time = getTime(chat.time);
+    //newChat.latestMessage = getLatest(chat.messages);
     newChat.id = chat.id;
-    newChat.messages = chat.messages;
+    // newChat.messages = chat.messages;
     return newChat;
   };
 

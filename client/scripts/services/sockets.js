@@ -73,19 +73,13 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       deferred.reject(err.message);
     });
 
-    //define socket properties
     socket.on('onlineList', function(onlineList) {
-      //run some kind of callback to index.js that causes the online list to be updated
-      console.log('onlineList: ' + onlineList);
-      // console.log(socket.user);
       data.onlineList = onlineList;
       dataChanged += 1;
       $rootScope.$apply();
     });
 
     socket.on('userList', function(serverData) {
-      console.log('user list: ' + serverData.user);
-      // console.log(socket.user);
       data.userList = serverData.userList;
       dataChanged += 1;
       console.log(dataChanged);
@@ -99,8 +93,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     socket.on('newConversation', function(conversation) {
       console.log(conversation);
       //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
-      //need to process chat before adding to list.
-      //chats.
+      conversation = chats.getConversationInfo(conversation, username)
       data.conversationsList.unshift(conversation);
       console.debug(data.conversationsList);
       dataChanged += 1;
