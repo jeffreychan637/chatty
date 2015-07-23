@@ -231,9 +231,11 @@ angular.module('chatty')
 
     $scope.updateConversation = function(index) {
       $scope.currConversation = $scope.conversationsList[index];
-      $scope.currConversation.unread = 0;
       scrollToBottom($('.conversation-box'));
-      sockets.readMessage(socket, $scope.currConversation.id);
+      if ($scope.currConversation.unread) {
+        $scope.currConversation.unread = 0;
+        sockets.readMessage(socket, $scope.currConversation.id);
+      }
     };
 
     var scrollToBottom = function(object) {
