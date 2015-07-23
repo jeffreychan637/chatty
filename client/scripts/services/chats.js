@@ -41,6 +41,7 @@ angular.module('chatty').factory('chats', function () {
   var getConversationInfo = function(chat, username) {
     console.log(chat);
     var newChat = getRecipientandUnread(chat, username);
+    newChat.unixTime = chat.time;
     newChat.time = getTime(chat.time);
     //newChat.latestMessage = getLatest(chat.messages);
     newChat.id = chat.id;

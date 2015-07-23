@@ -117,10 +117,15 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     //provide some id so server knows where in the list you are
   };
 
-  var getMessages = function(socket) {
-    socket.emit('getMessages', {});
-    //provide some id so server knows where in the list you are
-    //provide conversation id too
+  var getMessages = function(socket, conversation) {
+    var latestTime;
+    if (conversation.messages) {
+      latestTime = conversation.messages[0].unixTime;
+    } else {
+      latestTime = Date.now();
+    }
+    socket.emit('getMessages', {conversationId: conversation.conversationId,
+                                latestTime: latestTime});
   };
 
   var sendConversation = function(socket, conversation) {
@@ -136,12 +141,6 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     console.log('sending readMessage');
     socket.emit('readMessage', conversationId);
   };
-
-//  var getOnlineList = function(socket) {
-//    console.log('emit onlineList');
-////    socket.emit('onlineList');
-//    //I don't think you should ever be getting online list...it should be sent to you automatically...
-//  };
 
   var disconnect = function(socket) {
     socket.emit('disconnect');

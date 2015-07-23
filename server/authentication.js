@@ -101,11 +101,6 @@ var postAuthenticate = function(socket, data) {
 var setupSocket = function(user) {
   connections.setupSocket(user);
 
-//  user.socket.on('onlineList', function() {
-//    user.socket.emit('onlineList', onlineList);
-//  });
-  //should be ok to remove this - don't ever have to ask for online list.
-
   user.socket.on('disconnect', function() {
     onlineList = removeStringFromList(onlineList, user.username);
     socketList = removeObjectFromSocketList(socketList, user.username);
