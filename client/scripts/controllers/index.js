@@ -129,7 +129,7 @@ angular.module('chatty')
             socket = returnedSocket;
             console.log('yes');
             $scope.password = '';
-            getBasicInfo();
+            waitForInfo();
           },
           function(error) {
             console.log('no');
@@ -182,20 +182,14 @@ angular.module('chatty')
       }
     };
 
-    var getBasicInfo = function() {
+    var waitForInfo = function() {
       $scope.loginMessage = 'Loading Data...';
-      sockets.getBasicInfo(socket).then(
-        function(data) {
-          modals.login.modal('hide');
-          $timeout(function() {
-                    $scope.loading = false;
-                  }, 1000);
-          //do something with loaded data
-        },
-        function() {
-          console.log('get basic info failed');
-          //show some failure to load info; please refresh page message
-        });
+      $timeout(function() {
+        modals.login.modal('hide');
+        $timeout(function() {
+                  $scope.loading = false;
+                }, 1000);
+      }, 1000);
     };
 
     $scope.restartLogin = function() {
