@@ -13,12 +13,12 @@ var setupSocket = function(user) {
   }
   database.getUserListSetup(callbackUserList);
 
-  user.socket.on('getConversations', function(lastestTime) {
+  user.socket.on('getConversations', function(latestTime) {
     console.log('GETTING CONVERSATIONS');
-    console.log(lastestTime);
-    if (typeof lastestTime == 'number') {
+    console.log(latestTime);
+    if (typeof latestTime == 'number') {
       console.log('yep - convos');
-      getConversations(user, lastestTime);
+      getConversations(user, latestTime);
     }
   });
   user.socket.on('getMessages', function(request) {
@@ -41,20 +41,22 @@ var setupSocket = function(user) {
 
 var verifyRequest = function(request) {
   var verifiedRequest = {};
+  console.log(typeof request.conversationId);
+  console.log(typeof request.latestTime);
   if (typeof request.conversationId == 'string') {
     verifiedRequest.conversationId = request.conversationId;
   } else {
     return false;
   }
-  if (typeof request.lastestTime == 'number') {
-    verifiedRequest.lastestTime = request.lastestTime;
+  if (typeof request.latestTime == 'number') {
+    verifiedRequest.latestTime = request.latestTime;
   } else {
     return false;
   }
   return verifiedRequest;
 };
 
-var getConversations = function(user, lastestTime) {
+var getConversations = function(user, latestTime) {
   var conversationCallback = function(conversation) {
     user.socket.emit('newConversation', conversation);
   }
@@ -64,7 +66,7 @@ var getConversations = function(user, lastestTime) {
   var callbacks = {conversation: conversationCallback,
                    message: messageCallback
                   };
-  database.getConversations(user.username, lastestTime, callbacks);
+  database.getConversations(user.username, latestTime, callbacks);
 };
 
 var getMessages = function(user, request) {

@@ -40,7 +40,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
                     socket.emit('authentication', user);
                     console.log("trying login again");
                  }
-               }, 6000);
+               }, 8000);
 
     return deferred.promise;
   }
@@ -121,11 +121,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     console.log('getting messages');
     var latestTime;
     if (conversation.messages) {
-      latestTime = conversation.messages[0].unixTime;
+      console.log(conversation.messages);
+      latestTime = conversation.messages[0].time - 1;
     } else {
       latestTime = Date.now();
     }
-    socket.emit('getMessages', {conversationId: conversation.conversationId,
+    socket.emit('getMessages', {conversationId: conversation.id,
                                 latestTime: latestTime});
   };
 
@@ -139,7 +140,6 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
   };
 
   var readMessage = function(socket, conversationId) {
-    console.log('sending readMessage');
     socket.emit('readMessage', conversationId);
   };
 
