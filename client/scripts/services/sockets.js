@@ -83,6 +83,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     });
 
     socket.on('newConversation', function(conversation) {
+      console.log('latest conversation');
       console.log(conversation);
       //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
       conversation = chats.getConversationInfo(conversation, username)

@@ -147,7 +147,7 @@ var setupSocket = function(user) {
   connections.sendInitialData(user);
 };
 
-var sendToOnline = function(recipient, object, isMessage) {
+var sendToOnline = function(sender, recipient, object, isMessage) {
   console.log(recipient);
   console.log(onlineList);
   if (contains(onlineList, recipient)) {
@@ -156,6 +156,14 @@ var sendToOnline = function(recipient, object, isMessage) {
       recSocket.socket.emit('newMessage', object);
     } else {
       recSocket.socket.emit('newConversation', object);
+    }
+  }
+  if (sender) {
+    var sendSocket = getObjectFromSocketList(socketList, sender);
+    if (isMessage) {
+      sendSocket.socket.emit('newMessage', object);
+    } else {
+      sendSocket.socket.emit('newConversation', object)
     }
   }
 }

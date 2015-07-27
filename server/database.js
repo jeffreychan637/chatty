@@ -106,8 +106,8 @@ var storeConversation = function(conversation, messages, callback) {
   messagesRef.child(id).push(messages);
 
   conversation.id = id;
-  callback(recipient, conversation, false);
-  callback(recipient, {conversationId: id, message: messages}, true);
+  callback(sender, recipient, conversation, false);
+  callback(sender, recipient, {conversationId: id, message: messages}, true);
   console.log('conversation stored');
 };
 
@@ -141,7 +141,7 @@ var storeMessage = function(message, conversationId, callback) {
         if (recipientUnread == 'origSenderUnread') {
           callback(sender, messageObject);
         } else {
-          callback(recipient, messageObject, true);
+          callback(null, recipient, messageObject, true);
         }
       } else {
         console.log('verify failed');

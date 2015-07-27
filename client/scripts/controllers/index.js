@@ -37,7 +37,7 @@ angular.module('chatty')
 
         conversationBox.scroll(function() {
           if (!conversationBox.scrollTop()) {
-            sockets.getMessages(socket, $scope.currConversation);
+            sockets.getMessages(socket, $scope.curConversation);
           }
         });
 
@@ -205,8 +205,9 @@ angular.module('chatty')
             ]
           }
           sockets.sendConversation(socket, conversation);
-          $scope.currConversation = chats.getConversationInfo(conversation, $scope.username);
-          $scope.conversationsList.unshift($scope.currConversation);
+          // $scope.curConversation = chats.getConversationInfo(conversation, $scope.username);
+          // $scope.conversationsList.unshift($scope.curConversation);
+          console.log('conversationsList');
           console.log($scope.conversationsList);
           modals.newConversation.modal('hide');
           $timeout(function() {
@@ -240,18 +241,18 @@ angular.module('chatty')
           content: $scope.replyMessage.trim()
         }
         $scope.replyMessage = '';
-        $scope.currConversation.messages.push(message);
+        $scope.curConversation.messages.push(message);
         scrollToBottom($('.conversation-box'));
-        sockets.sendMessage(socket, message, $scope.currConversation.id);
+        sockets.sendMessage(socket, message, $scope.curConversation.id);
       }
     };
 
     $scope.updateConversation = function(index) {
-      $scope.currConversation = $scope.conversationsList[index];
+      $scope.curConversation = $scope.conversationsList[index];
       scrollToBottom($('.conversation-box'));
-      if ($scope.currConversation.unread) {
-        $scope.currConversation.unread = 0;
-        sockets.readMessage(socket, $scope.currConversation.id);
+      if ($scope.curConversation.unread) {
+        $scope.curConversation.unread = 0;
+        sockets.readMessage(socket, $scope.curConversation.id);
       }
     };
 
