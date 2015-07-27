@@ -111,21 +111,28 @@ var storeMessage = function(message, conversationId) {
   console.log(conversationId);
 
   var conRef = conversationsRef.child(conversationId);
-  var time = {'time': message.time};
-  conRef.update(time);
-
-  messagesRef.child(conversationId).push(message);
 
   conRef.child('origSender').once('value', function (sender) {
     conRef.child('origRecipient').once('value', function(recipient) {
       sender = sender.val();
       recipient = recipient.val();
-      usersRef.child(sender).child(recipient).update(time);
-      usersRef.child(recipient).child(sender).update(time);
-      var recipientUnread = getUnread(sender, message.sender, 0);
-      conRef.child(recipientUnread).transaction(function(currValue) {
-        return (currValue || 0) + 1;
-      }, function() {}, false);
+      console.log('verifying message sender');
+      if ((message.sender == sender) || (message.sender == recipient)) {
+        console.log('message sender is valid');
+        var time = {'time': message.time};
+        conRef.update(time);
+
+        messagesRef.child(conversationId).push(message);
+
+        usersRef.child(sender).child(recipient).update(time);
+        usersRef.child(recipient).child(sender).update(time);
+        var recipientUnread = getUnread(sender, message.sender, 0);
+        conRef.child(recipientUnread).transaction(function(currValue) {
+          return (currValue || 0) + 1;
+        }, function() {}, false);
+      } else {
+        console.log('verify failed');
+      }
     });
   });
 };
