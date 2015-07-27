@@ -72,7 +72,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
     socket.on('newMessage', function(response) {
       console.log(response);
-      //TAKE ADVATANGE OF FACT THAT OBJECT REFERENCES ARE POINTERS
+      //TAKES ADVANTAGE OF FACT THAT OBJECT REFERENCES ARE POINTERS
       //ASSUMING MESSAGES ARRIVE IN ORDER
       var conversation = getParentConversation(response.conversationId);
       if (conversation) {

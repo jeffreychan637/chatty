@@ -73,7 +73,7 @@ var getMessages = function(user, request) {
   var callback = function(message) {
     user.socket.emit('newMessage', message);
   }
-  database.getMessages(request, callback);
+  database.verifyMessagesRequest(user.username, request, callback);
 };
 
 var storeConversation = function(conversation, messages) {

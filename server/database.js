@@ -36,7 +36,22 @@ var getConversations = function(username, latestTime, callbacks) {
   );
 };
 
+var verifyMessagesRequest = function(username, request, callback) {
+  console.log('verifying Messages Request');
+  var conRef = conversationsRef.child(request.conversationId);
+  conRef.child('origSender').once('value', function (sender) {
+    conRef.child('origRecipient').once('value', function(recipient) {
+      console.log(username + ' ' + sender + ' ' + recipient);
+      if ((username == sender.val()) || (username == recipient.val())) {
+        console.log('REQUEST VALID');
+        getMessages(request, callback);
+      }
+    });
+  });
+};
+
 var getMessages = function(request, callback) {
+  console.log('getting messages...!');
   var messages = messagesRef.child(request.conversationId);
   messages.orderByChild('time').endAt(request.latestTime).limitToLast(
     MESSAGES_SENT_PER_TIME).on('child_added',
@@ -148,6 +163,7 @@ var getUnread = function(senderDB, senderClient, chooseSender) {
 
 module.exports = {
   getConversations: getConversations,
+  verifyMessagesRequest: verifyMessagesRequest,
   getMessages: getMessages,
   addUser: addUser,
   getUserListSetup: getUserListSetup,
