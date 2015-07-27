@@ -19,15 +19,15 @@ var getConversations = function(username, latestTime, callbacks) {
       console.log('got con key from db');
       console.log(snapshot.val());
       if (snapshot.val() != null) {
-        conversationsRef.child(snapshot.val().conKey).once('value',
+        conversationsRef.child(snapshot.val().id).once('value',
           function(conSnapshot) {
             console.log('got conversation from db');
             console.log(conSnapshot.val());
             var conversation = conSnapshot.val();
-            conversation.id = snapshot.val().conKey;
+            conversation.id = snapshot.val().id;
             callbacks.conversation(conversation);
         });
-        var messageRequest = {conversationId: snapshot.val().conKey,
+        var messageRequest = {conversationId: snapshot.val().id,
                               latestTime: latestTime
                              };
         getMessages(messageRequest, callbacks.message);
@@ -92,17 +92,22 @@ var getUserListSetup = function(callback) {
   });
 }
 
-var storeConversation = function(conversation, messages) {
+var storeConversation = function(conversation, messages, callback) {
   var sender = conversation.origSender;
   var recipient = conversation.origRecipient;
 
   var conRef = conversationsRef.push(conversation);
-  var conRefInUser = {'conKey' : conRef.key(), 'time' : messages.time};
+  var id = conRef.key();
+  var conRefInUser = {'id' : id, 'time' : messages.time};
 
   usersRef.child(sender).child(recipient).update(conRefInUser);
   usersRef.child(recipient).child(sender).update(conRefInUser);
 
-  messagesRef.child(conRef.key()).push(messages);
+  messagesRef.child(id).push(messages);
+
+  conversation.id = id;
+  callback(recipient, conversation, false);
+  callback(recipient, {conversationId: id, message: messages}, true);
   console.log('conversation stored');
 };
 
@@ -136,7 +141,7 @@ var storeMessage = function(message, conversationId, callback) {
         if (recipientUnread == 'origSenderUnread') {
           callback(sender, messageObject);
         } else {
-          callback(recipient, messageObject);
+          callback(recipient, messageObject, true);
         }
       } else {
         console.log('verify failed');

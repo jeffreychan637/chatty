@@ -76,8 +76,8 @@ var getMessages = function(user, request) {
   database.verifyMessagesRequest(user.username, request, callback);
 };
 
-var storeConversation = function(conversation, messages) {
-  database.storeConversation(conversation, messages);
+var storeConversation = function(conversation, messages, callback) {
+  database.storeConversation(conversation, messages, callback);
 };
 
 var storeMessage = function(message, conversationId, callback) {

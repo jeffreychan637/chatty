@@ -126,7 +126,7 @@ var setupSocket = function(user) {
     var verifiedConvo = verifyConversation(user, conversation);
     if (verifiedConvo) {
       connections.storeConversation(verifiedConvo.conversation,
-                                    verifiedConvo.messages);
+                                    verifiedConvo.messages, sendToOnline);
     }
     //failing silentily
   });
@@ -137,23 +137,28 @@ var setupSocket = function(user) {
     console.log('got message');
     console.log(messageObject);
     var verifiedMessage = verifyMessage(user, messageObject.message);
-    var callback = function(recipient, message) {
-      console.log(recipient);
-      console.log(onlineList);
-      if (contains(onlineList, recipient)) {
-        var recSocket = getObjectFromSocketList(socketList, recipient);
-        recSocket.socket.emit('newMessage', message);
-      }
-    }
     if (verifiedMessage && typeof messageObject.conversationId == 'string') {
       connections.storeMessage(verifiedMessage, messageObject.conversationId,
-                               callback);
+                               sendToOnline);
     }
     //failing silently
   });
 
   connections.sendInitialData(user);
 };
+
+var sendToOnline = function(recipient, object, isMessage) {
+  console.log(recipient);
+  console.log(onlineList);
+  if (contains(onlineList, recipient)) {
+    var recSocket = getObjectFromSocketList(socketList, recipient);
+    if (isMessage) {
+      recSocket.socket.emit('newMessage', object);
+    } else {
+      recSocket.socket.emit('newConversation', object);
+    }
+  }
+}
 
 var verifyConversation = function(user, conversation) {
     var convoObject = {};
