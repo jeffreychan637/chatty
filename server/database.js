@@ -19,15 +19,15 @@ var getConversations = function(username, latestTime, callbacks) {
       console.log('got con key from db');
       console.log(snapshot.val());
       if (snapshot.val() != null) {
-        conversationsRef.child(snapshot.val().id).once('value',
+        conversationsRef.child(snapshot.val().conId).once('value',
           function(conSnapshot) {
             console.log('got conversation from db');
             console.log(conSnapshot.val());
             var conversation = conSnapshot.val();
-            conversation.id = snapshot.val().id;
+            conversation.id = snapshot.val().conId;
             callbacks.conversation(conversation);
         });
-        var messageRequest = {conversationId: snapshot.val().id,
+        var messageRequest = {conversationId: snapshot.val().conId,
                               latestTime: latestTime
                              };
         getMessages(messageRequest, callbacks.message);
@@ -98,7 +98,7 @@ var storeConversation = function(conversation, messages, callback) {
 
   var conRef = conversationsRef.push(conversation);
   var id = conRef.key();
-  var conRefInUser = {'id' : id, 'time' : messages.time};
+  var conRefInUser = {'conId' : id, 'time' : messages.time};
 
   usersRef.child(sender).child(recipient).update(conRefInUser);
   usersRef.child(recipient).child(sender).update(conRefInUser);
