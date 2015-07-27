@@ -40,7 +40,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
                     socket.emit('authentication', user);
                     console.log("trying login again");
                  }
-               }, 8000);
+               }, 15000);
 
     return deferred.promise;
   }

@@ -106,7 +106,7 @@ var storeConversation = function(conversation, messages) {
   console.log('conversation stored');
 };
 
-var storeMessage = function(message, conversationId) {
+var storeMessage = function(message, conversationId, callback) {
   //what if conversation not created yet?
   console.log(conversationId);
 
@@ -130,6 +130,14 @@ var storeMessage = function(message, conversationId) {
         conRef.child(recipientUnread).transaction(function(currValue) {
           return (currValue || 0) + 1;
         }, function() {}, false);
+        var messageObject = {conversationId: conversationId,
+                             message: message
+                            };
+        if (recipientUnread == 'origSenderUnread') {
+          callback(sender, messageObject);
+        } else {
+          callback(recipient, messageObject);
+        }
       } else {
         console.log('verify failed');
       }

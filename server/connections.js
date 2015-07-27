@@ -80,8 +80,8 @@ var storeConversation = function(conversation, messages) {
   database.storeConversation(conversation, messages);
 };
 
-var storeMessage = function(message, conversationId) {
-  database.storeMessage(message, conversationId);
+var storeMessage = function(message, conversationId, callback) {
+  database.storeMessage(message, conversationId, callback);
 };
 
 var sendInitialData = function(user) {

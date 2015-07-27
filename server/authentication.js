@@ -32,6 +32,15 @@ var removeObjectFromSocketList = function(list, user) {
   return list;
 };
 
+var getObjectFromSocketList = function(list, user) {
+  var i;
+  for (i = 0; i < list.length; i++) {
+    if (list[i].username == user) {
+      return list[i];
+    }
+  }
+}
+
 var contains = function(array, value) {
   return array.indexOf(value) > -1;
 }
@@ -128,8 +137,17 @@ var setupSocket = function(user) {
     console.log('got message');
     console.log(messageObject);
     var verifiedMessage = verifyMessage(user, messageObject.message);
+    var callback = function(recipient, message) {
+      console.log(recipient);
+      console.log(onlineList);
+      if (contains(onlineList, recipient)) {
+        var recSocket = getObjectFromSocketList(socketList, recipient);
+        recSocket.socket.emit('newMessage', message);
+      }
+    }
     if (verifiedMessage && typeof messageObject.conversationId == 'string') {
-      connections.storeMessage(verifiedMessage, messageObject.conversationId);
+      connections.storeMessage(verifiedMessage, messageObject.conversationId,
+                               callback);
     }
     //failing silently
   });
