@@ -4,6 +4,9 @@
 angular.module('chatty').factory('chats', function () {
 
   var getRecipientandUnread = function(chat, username) {
+    console.log(chat.origRecipient);
+    console.log(username);
+    console.log('WTFFFFFF');
     if (chat.origRecipient == username) {
       return {recipient: chat.origSender,
               unread: chat.origRecipientUnread || 0

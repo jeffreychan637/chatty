@@ -117,13 +117,18 @@ angular.module('chatty')
                   },
                   function() {
                     messagesData = sockets.getMessagesData();
-                    if (messagesData.changedId && $scope.curConversation) {
-                      if (messagesData.changedId == $scope.curConversation.id) {
-                        scrollToBottom(conversationBox);
-                        sockets.readMessage(socket, $scope.curConversation.id);
+                    if (messagesData.changedId) {
+                      if ($scope.curConversation) {
+                        if (messagesData.changedId == $scope.curConversation.id) {
+                          scrollToBottom(conversationBox);
+                          sockets.readMessage(socket, $scope.curConversation.id);
+                        } else {
+                          $scope.conversationsList[
+                                  messagesData.changedIndex].unread += 1;
+                        }
                       } else {
                         $scope.conversationsList[
-                                messagesData.changedIndex].unread += 1;
+                                  messagesData.changedIndex].unread += 1;
                       }
                     }
                   }, true);
@@ -300,6 +305,14 @@ angular.module('chatty')
           $scope.curConversation.messages.push(message);
           chats.updateConversationInfo($scope.curConversation, Date.now());
           scrollToBottom(conversationBox);
+          var index = getConsIndex($scope.curConversation.id);
+          console.log(index);
+          console.log('^cur index');
+          if (index) {
+            console.log('splicing and dicing');
+            $scope.conversationsList.splice(index, 1);
+            $scope.conversationsList.unshift($scope.curConversation);
+          }
           sockets.sendMessage(socket, message, $scope.curConversation.id);
         }
       }
@@ -320,6 +333,15 @@ angular.module('chatty')
             object.animate({ scrollTop: object.prop('scrollHeight') }, 'slow');
             console.log('now running');
             }, 500);
+    }
+
+    var getConsIndex = function(id) {
+      var i;
+      for (i = 0; i < $scope.conversationsList.length; i++) {
+        if ($scope.conversationsList[i].id == id) {
+          return i;
+        }
+      }
     }
 
     $scope.logout = function() {
