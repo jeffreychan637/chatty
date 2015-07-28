@@ -108,7 +108,7 @@
 
             <div class="conversation">
                 <div class="conversation-box">
-                    <div ng-repeat="message in currConversation.messages">
+                    <div ng-repeat="message in curConversation.messages">
                         <span class="message" ng-class="{false: 'from', true: 'to'}[username == message.sender]">{{message.content}}</span>
                         <br class="clear">
                     </div>

@@ -139,7 +139,7 @@ var storeMessage = function(message, conversationId, callback) {
                              message: message
                             };
         if (recipientUnread == 'origSenderUnread') {
-          callback(sender, messageObject);
+          callback(null, sender, messageObject, true);
         } else {
           callback(null, recipient, messageObject, true);
         }
