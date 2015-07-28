@@ -49,36 +49,84 @@ angular.module('chatty')
     });
 
     var socket,
-        data;
+        listsData,
+        consData,
+        messagesData,
+        conversationBox = $('.conversation-box');
     $scope.userList = [];
     $scope.loading = false;
     $scope.loginError = false;
 
     $scope.conversationsList = [];
 
+    // $scope.$watch(function() {
+    //                 return sockets.checkData();
+    //               },
+    //               function() {
+    //                 data = sockets.getData();
+    //                 $scope.onlineList = data.onlineList;
+    //                 if (data.userList && data.onlineList) {
+    //                   console.log('current userList: ' + data.userList);
+    //                   console.log('current onlineList: ' + data.onlineList);
+    //                   var index = data.userList.indexOf($scope.username);
+    //                   if (index > -1) {
+    //                     data.userList.splice(index, 1);
+    //                   }
+    //                   data.userList.sort(sortByOnline);
+    //                   $scope.userList = data.userList;
+    //                 }
+    //                 console.log('saw change in data');
+    //                 console.log(sockets.checkData());
+    //                 console.log('sorted: ' + $scope.userList);
+    //                 $scope.conversationsList = data.conversationsList;
+    //                 console.log('conversationsList');
+    //                 console.debug($scope.conversationsList);
+    // }, true);
+
     $scope.$watch(function() {
-                    return sockets.checkData();
+                    return sockets.checkListsData();
                   },
                   function() {
-                    data = sockets.getData();
-                    $scope.onlineList = data.onlineList;
-                    if (data.userList && data.onlineList) {
-                      console.log('current userList: ' + data.userList);
-                      console.log('current onlineList: ' + data.onlineList);
-                      var index = data.userList.indexOf($scope.username);
+                    listsData = sockets.getListsData();
+                    $scope.onlineList = listsData.onlineList;
+                    if (listsData.userList && listsData.onlineList) {
+                      console.log('current userList: ' + listsData.userList);
+                      console.log('current onlineList: ' + listsData.onlineList);
+                      var index = listsData.userList.indexOf($scope.username);
                       if (index > -1) {
-                        data.userList.splice(index, 1);
+                        listsData.userList.splice(index, 1);
                       }
-                      data.userList.sort(sortByOnline);
-                      $scope.userList = data.userList;
+                      listsData.userList.sort(sortByOnline);
+                      $scope.userList = listsData.userList;
                     }
-                    console.log('saw change in data');
-                    console.log(sockets.checkData());
                     console.log('sorted: ' + $scope.userList);
-                    $scope.conversationsList = data.conversationsList;
+                  }, true);
+
+    $scope.$watch(function() {
+                    return sockets.checkConsData();
+                  },
+                  function() {
+                    consData = sockets.getConsData();
+                    $scope.conversationsList = consData.conversationsList;
                     console.log('conversationsList');
                     console.debug($scope.conversationsList);
-    }, true);
+                  }, true);
+
+    $scope.$watch(function() {
+                    return sockets.checkMessagesData();
+                  },
+                  function() {
+                    messagesData = sockets.getMessagesData();
+                    if (messagesData.changedId && $scope.curConversation) {
+                      if (messagesData.changedId == $scope.curConversation.id) {
+                        scrollToBottom(conversationBox);
+                        sockets.readMessage(socket, $scope.curConversation.id);
+                      } else {
+                        $scope.conversationsList[
+                                messagesData.changedIndex].unread += 1;
+                      }
+                    }
+                  }, true);
 
     var sortByOnline = function(a, b) {
       var aOnline = contains($scope.onlineList, a);
@@ -250,7 +298,8 @@ angular.module('chatty')
           }
           $scope.replyMessage = '';
           $scope.curConversation.messages.push(message);
-          scrollToBottom($('.conversation-box'));
+          chats.updateConversationInfo($scope.curConversation, Date.now());
+          scrollToBottom(conversationBox);
           sockets.sendMessage(socket, message, $scope.curConversation.id);
         }
       }
@@ -258,11 +307,12 @@ angular.module('chatty')
 
     $scope.updateConversation = function(index) {
       $scope.curConversation = $scope.conversationsList[index];
-      scrollToBottom($('.conversation-box'));
+      scrollToBottom(conversationBox);
       if ($scope.curConversation.unread) {
         $scope.curConversation.unread = 0;
         sockets.readMessage(socket, $scope.curConversation.id);
       }
+      console.log($scope.curConversation.messages);
     };
 
     var scrollToBottom = function(object) {
