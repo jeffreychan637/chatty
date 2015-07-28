@@ -217,7 +217,7 @@ angular.module('chatty')
         } else {
           var newRecipient = $scope.newRecipient;
           $scope.newRecipient += ' is not a valid user!';
-          showError($('#new-recipient'));
+          showError($('#new-recipient'), 'black');
           $timeout(function() {
             $scope.newRecipient = newRecipient;
           }, 1000);
@@ -225,8 +225,8 @@ angular.module('chatty')
       }
     };
 
-    var showError = function(element) {
-      var origColor = element.css('color');
+    var showError = function(element, origColor) {
+      console.log(origColor);
       element.css('color', 'red');
       $timeout(function() {
         element.css('color', origColor);
@@ -234,16 +234,25 @@ angular.module('chatty')
     };
 
     $scope.sendMessage = function(event) {
-      if (!event.shiftKey && event.keyCode == 13 && $scope.replyMessage) {
+      if (!$scope.curConversation) {
         event.preventDefault();
-        var message = {
-          sender: $scope.username,
-          content: $scope.replyMessage.trim()
+        $scope.replyMessage = 'Select a conversation';
+        showError($('.reply'), 'black');
+        $timeout(function() {
+          $scope.replyMessage = '';
+        }, 1000);
+      } else {
+        if (!event.shiftKey && event.keyCode == 13 && $scope.replyMessage) {
+          event.preventDefault();
+          var message = {
+            sender: $scope.username,
+            content: $scope.replyMessage.trim()
+          }
+          $scope.replyMessage = '';
+          $scope.curConversation.messages.push(message);
+          scrollToBottom($('.conversation-box'));
+          sockets.sendMessage(socket, message, $scope.curConversation.id);
         }
-        $scope.replyMessage = '';
-        $scope.curConversation.messages.push(message);
-        scrollToBottom($('.conversation-box'));
-        sockets.sendMessage(socket, message, $scope.curConversation.id);
       }
     };
 
