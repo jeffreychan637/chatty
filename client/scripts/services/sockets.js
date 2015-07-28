@@ -3,18 +3,45 @@
 
 angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
-  var data = {'conversationsList' : []};
+  var data = {'lists': {'onlineList': [], 'userList': []},
+              'cons': {'conversationsList' : []},
+              'messages': {'changedId': null, 'changedIndex': null}
+             };
 
-  var getData = function() {
-    return data;
-  }
+  // var getData = function() {
+  //   return data;
+  // }
 
-  var dataChanged = 0;
+  var getListsData = function() {
+    return data.lists;
+  };
+
+  var getConsData = function() {
+    return data.cons;
+  };
+
+  var getMessagesData = function() {
+    return data.messages;
+  };
+
+  var listDataChanged = 0,
+      consDataChanged = 0,
+      messagesDataChanged = 0;
+
+  // var dataChanged = 0;
 
   var notAuthenticated = true;
 
-  var checkData = function() {
-    return dataChanged;
+  var checkListsData = function() {
+    return listDataChanged;
+  }
+
+  var checkConsData = function() {
+    return consDataChanged;
+  }
+
+  var checkMessagesData = function() {
+    return messagesDataChanged;
   }
 
   var reload = function(src) {
@@ -58,25 +85,34 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     });
 
     socket.on('onlineList', function(onlineList) {
-      data.onlineList = onlineList;
-      dataChanged += 1;
+      data.lists.onlineList = onlineList;
+      listDataChanged += 1;
       $rootScope.$apply();
     });
 
     socket.on('userList', function(serverData) {
-      data.userList = serverData.userList;
-      dataChanged += 1;
-      console.log(dataChanged);
+      data.lists.userList = serverData.userList;
+      listDataChanged += 1;
       $rootScope.$apply();
     });
 
     socket.on('newMessage', function(response) {
       console.log(response);
       //ASSUMING MESSAGES ARRIVE IN ORDER
-      var conversation = getParentConversation(response.conversationId);
+      var result = getParentConversation(response.conversationId);
+      var conversation = result.conversation;
+      var conIndex = result.index;
       if (conversation) {
         conversation.messages.push(response.message);
-        conversation.latestMessage = response.message.content;
+        chats.updateConversationInfo(conversation, response.message.time);
+        console.log('updated conversation');
+        console.log(conversation);
+        data.cons.conversationsList[conIndex] = conversation;
+        data.messages.changedId = conversation.id;
+        data.messages.changedIndex = conIndex;
+        consDataChanged += 1;
+        messagesDataChanged += 1;
+        $rootScope.$apply();
       } else {
         console.warn('Got message with no conversation parent');
       }
@@ -87,18 +123,19 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       console.log(conversation);
       //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
       conversation = chats.getConversationInfo(conversation, username)
-      data.conversationsList.unshift(conversation);
-      console.debug(data.conversationsList);
-      dataChanged += 1;
+      data.cons.conversationsList.unshift(conversation);
+      console.debug(data.cons.conversationsList);
+      //not updating changedId and changedIndex
+      consDataChanged += 1;
       $rootScope.$apply();
     });
   };
 
   var getParentConversation = function(conversationId) {
     var i;
-    for (i = 0; i < data.conversationsList.length; i++) {
-      if (data.conversationsList[i].id == conversationId) {
-        return data.conversationsList[i];
+    for (i = 0; i < data.cons.conversationsList.length; i++) {
+      if (data.cons.conversationsList[i].id == conversationId) {
+        return {conversation: data.cons.conversationsList[i], index: i};
       }
     }
     return false;
@@ -107,10 +144,10 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED
     console.log('getting conversations');
-    var length = data.conversationsList.length;
+    var length = data.cons.conversationsList.length;
     var latestTime;
     if (length) {
-      latestTime = data.conversationsList[length - 1].unixTime - 1;
+      latestTime = data.cons.conversationsList[length - 1].unixTime - 1;
     } else {
       latestTime = Date.now();
     }
@@ -151,8 +188,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     reload: reload,
     authenticate: authenticate,
     defineSocket: defineSocket,
-    getData: getData,
-    checkData: checkData,
+    getListsData: getListsData,
+    getConsData: getConsData,
+    getMessagesData: getMessagesData,
+    checkListsData: checkListsData,
+    checkConsData: checkConsData,
+    checkMessagesData: checkMessagesData,
     getConversations: getConversations,
     getMessages: getMessages,
     sendConversation: sendConversation,

@@ -19,7 +19,7 @@ angular.module('chatty').factory('chats', function () {
     console.log(messages);
     if (messages) {
       console.log(messages[messages.length - 1]);
-      return messages[messages.length - 1];
+      return messages[messages.length - 1].content;
     }
   };
 
@@ -46,7 +46,15 @@ angular.module('chatty').factory('chats', function () {
     return newChat;
   };
 
+  var updateConversationInfo = function(chat, time) {
+    console.log('updating conversation');
+    chat.unixTime = time;
+    chat.time = getTime(chat.unixTime);
+    chat.latestMessage = getLatest(chat.messages);
+  };
+
   return {
-    getConversationInfo: getConversationInfo
+    getConversationInfo: getConversationInfo,
+    updateConversationInfo: updateConversationInfo
   };
 });
