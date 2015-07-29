@@ -258,8 +258,6 @@ angular.module('chatty')
             ]
           }
           sockets.sendConversation(socket, conversation);
-          // $scope.curConversation = chats.getConversationInfo(conversation, $scope.username);
-          // $scope.conversationsList.unshift($scope.curConversation);
           console.log('conversationsList');
           console.log($scope.conversationsList);
           modals.newConversation.modal('hide');
