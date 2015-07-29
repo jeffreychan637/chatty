@@ -100,6 +100,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       processMessage(response);
     });
 
+    socket.on('onlineMessage', function(response) {
+      processMessage(response);
+      messagesDataChanged += 1;
+      $rootScope.$apply();
+    });
+
     socket.on('newConversation', function(conversation) {
       console.log('latest conversation');
       console.log(conversation);
@@ -134,11 +140,11 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       chats.updateConversationInfo(conversation, response.message.time);
       console.log('updated conversation');
       console.log(conversation);
-      data.cons.conversationsList[conIndex] = conversation;
+      data.cons.conversationsList.splice(conIndex, 1);
+      data.cons.conversationsList.unshift(conversation);
       data.messages.changedId = conversation.id;
       data.messages.changedIndex = conIndex;
       consDataChanged += 1;
-      messagesDataChanged += 1;
       $rootScope.$apply();
     } else {
       console.warn('Got message with no conversation parent');
