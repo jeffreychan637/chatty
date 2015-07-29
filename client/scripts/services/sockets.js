@@ -63,7 +63,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
                     reload('//cdn.socket.io/socket.io-1.3.5.js');
                     socket = io();
-                    defineSocket(socket, deferred);
+                    defineSocket(socket, deferred, user.username);
                     socket.emit('authentication', user);
                     console.log("trying login again");
                  }
@@ -97,25 +97,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     });
 
     socket.on('newMessage', function(response) {
-      console.log(response);
-      //ASSUMING MESSAGES ARRIVE IN ORDER
-      var result = getParentConversation(response.conversationId);
-      var conversation = result.conversation;
-      var conIndex = result.index;
-      if (conversation) {
-        conversation.messages.push(response.message);
-        chats.updateConversationInfo(conversation, response.message.time);
-        console.log('updated conversation');
-        console.log(conversation);
-        data.cons.conversationsList[conIndex] = conversation;
-        data.messages.changedId = conversation.id;
-        data.messages.changedIndex = conIndex;
-        consDataChanged += 1;
-        messagesDataChanged += 1;
-        $rootScope.$apply();
-      } else {
-        console.warn('Got message with no conversation parent');
-      }
+      processMessage(response);
     });
 
     socket.on('newConversation', function(conversation) {
@@ -139,6 +121,28 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       }
     }
     return false;
+  };
+
+  var processMessage = function(response) {
+    console.log(response);
+    //ASSUMING MESSAGES ARRIVE IN ORDER
+    var result = getParentConversation(response.conversationId);
+    var conversation = result.conversation;
+    var conIndex = result.index;
+    if (conversation) {
+      conversation.messages.push(response.message);
+      chats.updateConversationInfo(conversation, response.message.time);
+      console.log('updated conversation');
+      console.log(conversation);
+      data.cons.conversationsList[conIndex] = conversation;
+      data.messages.changedId = conversation.id;
+      data.messages.changedIndex = conIndex;
+      consDataChanged += 1;
+      messagesDataChanged += 1;
+      $rootScope.$apply();
+    } else {
+      console.warn('Got message with no conversation parent');
+    }
   };
 
   var getConversations = function(socket) {
