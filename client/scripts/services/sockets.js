@@ -143,7 +143,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       data.cons.conversationsList.splice(conIndex, 1);
       data.cons.conversationsList.unshift(conversation);
       data.messages.changedId = conversation.id;
-      data.messages.changedIndex = conIndex;
+      data.messages.changedIndex = 0;
       consDataChanged += 1;
       $rootScope.$apply();
     } else {

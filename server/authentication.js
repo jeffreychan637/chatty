@@ -153,7 +153,11 @@ var sendToOnline = function(sender, recipient, object, isMessage) {
   if (contains(onlineList, recipient)) {
     var recSocket = getObjectFromSocketList(socketList, recipient);
     if (isMessage) {
-      recSocket.socket.emit('newMessage', object);
+      if (sender) {
+        recSocket.socket.emit('newMessage', object);
+      } else {
+        recSocket.socket.emit('onlineMessage', object);
+      }
     } else {
       recSocket.socket.emit('newConversation', object);
     }
