@@ -54,16 +54,19 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, 
 
     socket.emit('authentication', user);
 
-    setInterval(function() {
-                 if (notAuthenticated) {
-
-                    reload('//cdn.socket.io/socket.io-1.3.5.js');
-                    socket = io();
-                    defineSocket(socket, deferred, user.username);
-                    socket.emit('authentication', user);
-                    console.log("trying login again");
-                 }
-               }, 10000);
+    var authInterval = setInterval(function() {
+                         if (notAuthenticated) {
+                            reload('//cdn.socket.io/socket.io-1.3.5.js');
+                            socket = io();
+                            defineSocket(socket, deferred, user.username);
+                            socket.emit('authentication', user);
+                            console.log("trying login again");
+                         } else {
+                          if (authInterval) {
+                            clearInterval(authInterval);
+                          }
+                         }
+                       }, 10000);
 
     return deferred.promise;
   }
@@ -93,11 +96,11 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, 
     });
 
     socket.on('initialMessage', function(response) {
-      processMessage(response);
+      processMessage(response, {'older' : false, 'online' : false});
     });
 
     socket.on('onlineMessage', function(response) {
-      processMessage(response);
+      processMessage(response, {'older' : false, 'online' : true});
       messagesDataChanged += 1;
       $rootScope.$apply();
     });
@@ -107,7 +110,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, 
     });
 
     socket.on('olderMessage', function(response) {
-      processMessage(response);
+      processMessage(response, {'older' : true, 'online' : false});
     });
 
     socket.on('olderConversation', function(conversation) {
@@ -137,9 +140,6 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, 
       console.log('trying to add to con list');
       var i;
       for (i = data.cons.conversationsList.length - 1; i >= 0; i--) {
-        console.log(i);
-        console.log(conversation.unixTime);
-        console.log(data.cons.conversationsList[i].unixTime);
         if (conversation.unixTime < data.cons.conversationsList[i].unixTime) {
           console.log(i);
           data.cons.conversationsList.splice(i + 1, 0, conversation);
@@ -156,33 +156,45 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, 
     $rootScope.$apply();
   };
 
-  var processMessage = function(response) {
+  var processMessage = function(response, args) {
     console.log(response);
     //ASSUMING MESSAGES ARRIVE IN ORDER
-    var result = getParentConversation(response.conversationId);
-    // if (!conversation) {
-    //   console.log('going to sleep');
-    //   setTimeout(function() {console.log('wokeup from sleep')}, 2000);
-    // }
-    if (result) {
-      var conversation = result.conversation;
-      var conIndex = result.index;
-      conversation.messages.push(response.message);
-      chats.updateConversationInfo(conversation, response.message.time);
-      console.log('updated conversation');
-      console.log(conversation);
-      data.cons.conversationsList.splice(conIndex, 1);
-      data.cons.conversationsList.unshift(conversation);
-      data.messages.changedId = conversation.id;
-      data.messages.changedIndex = 0;
-      consDataChanged += 1;
-      $rootScope.$apply();
+    var parentInfo = getParentConversation(response.conversationId);
+    if (parentInfo) {
+      addToConversation(response, args, parentInfo);
     } else {
+      var messageInterval = setInterval(function() {
+                              console.warn('message interval is running');
+                              parentInfo = getParentConversation(response.conversationId);
+                              if (parentInfo) {
+                                clearInterval(messageInterval);
+                                addToConversation(response, args, parentInfo);
+                              }
+                            }, 1000)
       console.warn('Got message with no conversation parent');
     }
   };
 
-  var addToConversation
+  var addToConversation = function(response, args, parentInfo) {
+    var conversation = parentInfo.conversation;
+    var conIndex = parentInfo.index;
+    if (args.older) {
+
+    } else {
+      conversation.messages.push(response.message);
+      chats.updateConversationInfo(conversation, response.message.time);
+      if (args.online) {
+        console.log('updated conversation');
+        console.log(conversation);
+        data.cons.conversationsList.splice(conIndex, 1);
+        data.cons.conversationsList.unshift(conversation);
+        data.messages.changedId = conversation.id;
+        data.messages.changedIndex = 0;
+        consDataChanged += 1;
+        $rootScope.$apply();
+      }
+    }
+  };
 
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED
