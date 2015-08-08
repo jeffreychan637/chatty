@@ -8,9 +8,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
               'messages': {'changedId': null, 'changedIndex': null}
              };
 
-  // var getData = function() {
-  //   return data;
-  // }
+  var gettingConversations = false;
 
   var getListsData = function() {
     return data.lists;
@@ -67,7 +65,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
                     socket.emit('authentication', user);
                     console.log("trying login again");
                  }
-               }, 15000);
+               }, 10000);
 
     return deferred.promise;
   }
@@ -151,6 +149,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
           break;
         }
       }
+      gettingConversations = false;
     }
     console.debug(data.cons.conversationsList);
     //not updating changedId and changedIndex
@@ -188,15 +187,18 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED
-    console.log('getting conversations');
-    var length = data.cons.conversationsList.length;
-    var latestTime;
-    if (length) {
-      latestTime = data.cons.conversationsList[length - 1].unixTime - 1;
-    } else {
-      latestTime = Date.now();
+    if (!gettingConversations) {
+      gettingConversations = true;
+      console.log('getting conversations');
+      var length = data.cons.conversationsList.length;
+      var latestTime;
+      if (length) {
+        latestTime = data.cons.conversationsList[length - 1].unixTime - 1;
+      } else {
+        latestTime = Date.now();
+      }
+      socket.emit('getConversations', latestTime);
     }
-    socket.emit('getConversations', latestTime);
   };
 
   var getMessages = function(socket, conversation) {
