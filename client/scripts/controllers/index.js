@@ -110,6 +110,8 @@ angular.module('chatty')
                     $scope.conversationsList = consData.conversationsList;
                     console.log('conversationsList');
                     console.debug($scope.conversationsList);
+                    console.info(consData.gettingConvos);
+                    $scope.gettingConvos = consData.gettingConvos;
                   }, true);
 
     $scope.$watch(function() {

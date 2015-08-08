@@ -171,6 +171,12 @@ i {
     right: 2px;
 }
 
+.loader {
+    display: block;
+    margin: auto;
+    padding: 7px 0px;
+}
+
 .user-list-heading {
     width: 15%;
     min-width: 190px;

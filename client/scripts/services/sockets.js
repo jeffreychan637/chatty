@@ -1,14 +1,12 @@
 'use strict';
 /*global $:false, FB:false, jQuery:false */
 
-angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
+angular.module('chatty').factory('sockets', function ($q, $rootScope, $timeout, chats) {
 
   var data = {'lists': {'onlineList': [], 'userList': []},
-              'cons': {'conversationsList' : []},
+              'cons': {'conversationsList' : [], 'gettingConvos': false},
               'messages': {'changedId': null, 'changedIndex': null}
              };
-
-  var gettingConversations = false;
 
   var getListsData = function() {
     return data.lists;
@@ -149,11 +147,12 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
           break;
         }
       }
-      gettingConversations = false;
+      data.cons.gettingConvos = false;
     }
     console.debug(data.cons.conversationsList);
     //not updating changedId and changedIndex
     consDataChanged += 1;
+    console.info(data.cons.gettingConvos);
     $rootScope.$apply();
   };
 
@@ -187,8 +186,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
 
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED
-    if (!gettingConversations) {
-      gettingConversations = true;
+    if (!data.cons.gettingConvos) {
+      data.cons.gettingConvos = true;
       console.log('getting conversations');
       var length = data.cons.conversationsList.length;
       var latestTime;
@@ -197,6 +196,13 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       } else {
         latestTime = Date.now();
       }
+      consDataChanged += 1;
+      $rootScope.$apply();
+      $timeout(function() {
+        data.cons.gettingConvos = false;
+        consDataChanged += 1;
+        $rootScope.$apply();
+      }, 2000);
       socket.emit('getConversations', latestTime);
     }
   };
