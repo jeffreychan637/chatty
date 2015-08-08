@@ -18,7 +18,7 @@ var setupSocket = function(user) {
     console.log(latestTime);
     if (typeof latestTime == 'number') {
       console.log('yep - convos');
-      getConversations(user, latestTime);
+      getConversations(user, latestTime, 'older');
     }
   });
   user.socket.on('getMessages', function(request) {
@@ -56,12 +56,12 @@ var verifyRequest = function(request) {
   return verifiedRequest;
 };
 
-var getConversations = function(user, latestTime) {
+var getConversations = function(user, latestTime, convoType) {
   var conversationCallback = function(conversation) {
-    user.socket.emit('newConversation', conversation);
+    user.socket.emit(convoType + 'Conversation', conversation);
   }
   var messageCallback = function(message) {
-    user.socket.emit('newMessage', message);
+    user.socket.emit('initialMessage', message);
   }
   var callbacks = {conversation: conversationCallback,
                    message: messageCallback
@@ -71,7 +71,7 @@ var getConversations = function(user, latestTime) {
 
 var getMessages = function(user, request) {
   var callback = function(message) {
-    user.socket.emit('newMessage', message);
+    user.socket.emit('olderMessage', message);
   }
   database.verifyMessagesRequest(user.username, request, callback);
 };
@@ -85,7 +85,7 @@ var storeMessage = function(message, conversationId, callback) {
 };
 
 var sendInitialData = function(user) {
-  getConversations(user, Date.now());
+  getConversations(user, Date.now(), 'initial');
 };
 
 module.exports = {

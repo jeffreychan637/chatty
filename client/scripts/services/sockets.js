@@ -96,7 +96,7 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       $rootScope.$apply();
     });
 
-    socket.on('newMessage', function(response) {
+    socket.on('initialMessage', function(response) {
       processMessage(response);
     });
 
@@ -106,16 +106,17 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       $rootScope.$apply();
     });
 
-    socket.on('newConversation', function(conversation) {
-      console.log('latest conversation');
-      console.log(conversation);
-      //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
-      conversation = chats.getConversationInfo(conversation, username)
-      data.cons.conversationsList.unshift(conversation);
-      console.debug(data.cons.conversationsList);
-      //not updating changedId and changedIndex
-      consDataChanged += 1;
-      $rootScope.$apply();
+    socket.on('initialConversation', function(conversation) {
+      processConversation(conversation, username, true);
+    });
+
+    socket.on('olderMessage', function(response) {
+      processMessage(response);
+    });
+
+    socket.on('olderConversation', function(conversation) {
+      console.log('older cons');
+      processConversation(conversation, username, false);
     });
   };
 
@@ -129,13 +130,45 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
     return false;
   };
 
+  var processConversation = function(conversation, username, initial) {
+    console.log('latest conversation');
+    console.log(conversation);
+    //CURRENTLY ASSUMING CONVERSATIONS ARRIVE IN ORDER
+    conversation = chats.getConversationInfo(conversation, username)
+    if (initial) {
+      data.cons.conversationsList.unshift(conversation);
+    } else {
+      console.log('trying to add to con list');
+      var i;
+      for (i = data.cons.conversationsList.length - 1; i >= 0; i--) {
+        console.log(i);
+        console.log(conversation.unixTime);
+        console.log(data.cons.conversationsList[i].unixTime);
+        if (conversation.unixTime < data.cons.conversationsList[i].unixTime) {
+          console.log(i);
+          data.cons.conversationsList.splice(i + 1, 0, conversation);
+          console.log(data.cons.conversationsList);
+          break;
+        }
+      }
+    }
+    console.debug(data.cons.conversationsList);
+    //not updating changedId and changedIndex
+    consDataChanged += 1;
+    $rootScope.$apply();
+  };
+
   var processMessage = function(response) {
     console.log(response);
     //ASSUMING MESSAGES ARRIVE IN ORDER
     var result = getParentConversation(response.conversationId);
-    var conversation = result.conversation;
-    var conIndex = result.index;
-    if (conversation) {
+    // if (!conversation) {
+    //   console.log('going to sleep');
+    //   setTimeout(function() {console.log('wokeup from sleep')}, 2000);
+    // }
+    if (result) {
+      var conversation = result.conversation;
+      var conIndex = result.index;
       conversation.messages.push(response.message);
       chats.updateConversationInfo(conversation, response.message.time);
       console.log('updated conversation');
@@ -150,6 +183,8 @@ angular.module('chatty').factory('sockets', function ($q, $rootScope, chats) {
       console.warn('Got message with no conversation parent');
     }
   };
+
+  var addToConversation
 
   var getConversations = function(socket) {
     //ASSUMES DATA.CONVERSATION IS SORTED

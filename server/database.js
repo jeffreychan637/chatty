@@ -8,7 +8,7 @@ var usersRef = new Firebase(secrets.firebaseUrl + '/users');
 var conversationsRef = new Firebase(secrets.firebaseUrl + '/conversations');
 var messagesRef = new Firebase(secrets.firebaseUrl + '/messages');
 
-var CONVERSATIONS_SENT_PER_TIME = 10;
+var CONVERSATIONS_SENT_PER_TIME = 5;
 var MESSAGES_SENT_PER_TIME = 20;
 
 var getConversations = function(username, latestTime, callbacks) {
