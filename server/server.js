@@ -5,7 +5,7 @@ var path = require('path'),
     bodyParser = require('body-parser');
 
 var app = express(),
-    server = app.listen(3000, '127.0.0.1'),
+    server = app.listen(process.env.PORT || 3000),
     authentication = require('./authentication')(server);
 
 app.use(bodyParser.json());
